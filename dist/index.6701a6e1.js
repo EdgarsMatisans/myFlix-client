@@ -22751,8 +22751,26 @@ class MainView extends _reactDefault.default.Component {
     constructor(){
         super();
         this.state = {
-            movies: [],
-            selectedMovie: null
+            movies: [
+                {
+                    _id: "619815065345f8c3362abc82",
+                    Title: 'Shrek',
+                    Description: 'A mean lord exiles fairytale creatures to the swamp of a grumpy ogre, who must go on a quest and rescue a princess for the lord in order to get his land back.',
+                    ImagePath: "https://www.imdb.com/title/tt0126029/mediaviewer/rm955136512/?ref_=tt_ov_i"
+                },
+                {
+                    _id: "619815a45345f8c3362abc83",
+                    Title: "Shrek 2",
+                    Description: "Shrek and Fiona travel to the Kingdom of Far Far Away, where Fiona's parents are King and Queen, to celebrate their marriage. When they arrive, they find they are not as welcome as they thought they would be.",
+                    ImagePath: "https://www.imdb.com/title/tt0298148/mediaviewer/rm183384576/?ref_=tt_ov_i"
+                },
+                {
+                    _id: "6198176d5345f8c3362abc85",
+                    Title: "Shrek the Third",
+                    Description: "Reluctantly designated as the heir to the land of Far, Far Away, Shrek hatches a plan to install the rebellious Artie as the new king while Princess Fiona tries to fend off a coup d'état by the jilted Prince Charming.",
+                    ImagePath: "https://www.imdb.com/title/tt0413267/mediaviewer/rm4214262784/?ref_=tt_ov_i"
+                }
+            ]
         };
     }
     componentDidMount() {
@@ -22775,7 +22793,7 @@ class MainView extends _reactDefault.default.Component {
             className: "main-view",
             __source: {
                 fileName: "src/components/main-view/main-view.jsx",
-                lineNumber: 37
+                lineNumber: 56
             },
             __self: this
         }));
@@ -22783,7 +22801,7 @@ class MainView extends _reactDefault.default.Component {
             className: "main-view",
             __source: {
                 fileName: "src/components/main-view/main-view.jsx",
-                lineNumber: 40
+                lineNumber: 59
             },
             __self: this,
             children: selectedMovie ? /*#__PURE__*/ _jsxRuntime.jsx(_movieView.MovieView, {
@@ -22793,7 +22811,7 @@ class MainView extends _reactDefault.default.Component {
                 },
                 __source: {
                     fileName: "src/components/main-view/main-view.jsx",
-                    lineNumber: 42
+                    lineNumber: 61
                 },
                 __self: this
             }) : movies.map((movie)=>/*#__PURE__*/ _jsxRuntime.jsx(_movieCard.MovieCard, {
@@ -22803,7 +22821,7 @@ class MainView extends _reactDefault.default.Component {
                     },
                     __source: {
                         fileName: "src/components/main-view/main-view.jsx",
-                        lineNumber: 44
+                        lineNumber: 63
                     },
                     __self: this
                 }, movie._id)

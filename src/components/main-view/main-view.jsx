@@ -28,7 +28,6 @@ export class MainView extends React.Component {
                 }
 
             ],
-            selectedMovie: null
         }
     }
 
@@ -68,8 +67,5 @@ export class MainView extends React.Component {
         );
     }
 }
-
-
-
 
 export default MainView;
