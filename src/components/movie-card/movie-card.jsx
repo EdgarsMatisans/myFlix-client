@@ -9,3 +9,10 @@ export class MovieCard extends React.Component {
         }}>{movie.Title}</div>;
     }
 }
+
+MovieCard.propTypes = {
+    movie: PropTypes.shape({
+        Title: PropTypes.string.isRequired,
+        ReleaseYear: PropTypes.number.isRequired,
+    }).isRequired,
+};
