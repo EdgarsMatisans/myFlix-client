@@ -15,7 +15,7 @@ export function RegistrationView(props) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        axios.post('https://protected-gorge-74849.herokuapp.com/users', {
+        axios.post('https://mysterious-refuge-92228.herokuapp.com/users', {
             Username: username,
             Password: password,
             Email: email,
