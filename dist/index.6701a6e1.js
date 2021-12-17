@@ -27864,16 +27864,39 @@ function LoginView(props) {
                     })
                 ]
             }),
-            /*#__PURE__*/ _jsxRuntime.jsx(_buttonDefault.default, {
-                variant: "primary",
-                type: "submit",
-                onClick: handleSubmit,
+            /*#__PURE__*/ _jsxRuntime.jsxs("div", {
+                className: "buttons-login",
                 __source: {
                     fileName: "src/components/login-view/login-view.jsx",
                     lineNumber: 38
                 },
                 __self: this,
-                children: "Submit"
+                children: [
+                    /*#__PURE__*/ _jsxRuntime.jsx(_buttonDefault.default, {
+                        onClick: ()=>{
+                            window.location.href = "/register";
+                        },
+                        variant: "primary",
+                        type: "button",
+                        __source: {
+                            fileName: "src/components/login-view/login-view.jsx",
+                            lineNumber: 39
+                        },
+                        __self: this,
+                        children: "Register"
+                    }),
+                    /*#__PURE__*/ _jsxRuntime.jsx(_buttonDefault.default, {
+                        variant: "success link",
+                        type: "submit",
+                        onClick: handleSubmit,
+                        __source: {
+                            fileName: "src/components/login-view/login-view.jsx",
+                            lineNumber: 40
+                        },
+                        __self: this,
+                        children: "Submit"
+                    })
+                ]
             })
         ]
     }));

@@ -35,9 +35,10 @@ export function LoginView(props) {
                 <Form.Label>Password</Form.Label>
                 <Form.Control type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} />
             </Form.Group>
-            <Button variant="primary" type="submit" onClick={handleSubmit}>
-                Submit
-            </Button>
+            <div className="buttons-login">
+                <Button onClick={() => { window.location.href = "/register" }} variant="primary" type="button">Register</Button>
+                <Button variant="success link" type="submit" onClick={handleSubmit}>Submit</Button>
+            </div>
         </Form>
     )
 
