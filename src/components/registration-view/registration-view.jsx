@@ -1,12 +1,15 @@
-import PropTypes from 'prop-types';
-import axios from 'axios';
-import React, { useState } from 'react';
-
-// React Bootstrap
-import { Form, Button, Container } from 'react-bootstrap';
-
+import React, { useState } from "react";
+import PropTypes from "prop-types";
+import axios from 'axios'
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+import Route from "react-router-dom"
+import Router from "react-router-dom"
+import BrowserRouter from "react-router-dom";
+import Container from 'react-bootstrap';
 // SCSS Import
 // import "./registration-view.scss"
+
 export function RegistrationView(props) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -34,48 +37,69 @@ export function RegistrationView(props) {
     return (
         <Container>
             <Form>
+
                 <Form.Group
-                    controlId="formBasicEmail">
+                    controlId="formBasicUsername">
                     <Form.Label>
-                        Email address
+                        Username:
                     </Form.Label>
                     <Form.Control
-                        type="email"
-                        placeholder="Enter email" />
-                    <Form.Text
-                        className="text-muted">
-                        We'll never share your email with anyone else.
-                    </Form.Text>
+                        className="username"
+                        value={username}
+                        type="text"
+                        placeholder="Create Username"
+                        onChange={e =>
+                            setUsername(e.target.value)}>
+                    </Form.Control>
                 </Form.Group>
 
                 <Form.Group
                     controlId="formBasicPassword">
                     <Form.Label>
-                        Password
+                        Password:
                     </Form.Label>
                     <Form.Control
-                        type="password"
-                        placeholder="Password" />
-                </Form.Group>
-
-                <Form.Group
-                    controlId="formBasicUsername">
-                    <Form.Label>
-                        Username
-                    </Form.Label>
-                    <Form.Control
-                        type="username"
-                        placeholder="Username" />
+                        className="password"
+                        value={password}
+                        type="text"
+                        placeholder="Create Password"
+                        onChange={e =>
+                            setPassword(e.target.value)}>
+                    </Form.Control>
                 </Form.Group>
 
                 <Form.Group
                     controlId="formBasicBirthday">
                     <Form.Label>
-                        Birthday
+                        Birthday:
                     </Form.Label>
                     <Form.Control
-                        type="birthday"
-                        placeholder="Birthday" />
+                        className="birthday"
+                        value={birthday}
+                        type="date"
+                        placeholder="Enter Birthday"
+                        onChange={e =>
+                            setBirthday(e.target.value)}>
+                    </Form.Control>
+                </Form.Group>
+
+                <Form.Group
+                    controlId="formBasicEmail">
+                    <Form.Label>
+                        Email:
+                    </Form.Label>
+                    <Form.Control
+                        className="email"
+                        value={email}
+                        type="email"
+                        placeholder="Enter Email"
+                        onChange={e =>
+                            setEmail(e.target.value)}>
+                    </Form.Control>
+                    <Form.Text
+                        className="text-muted">
+                        We'll never share your email with anyone else.
+                    </Form.Text>
                 </Form.Group>
 
                 <Form.Group
@@ -94,12 +118,3 @@ export function RegistrationView(props) {
         </Container>
     );
 }
-
-RegistrationView.propTypes = {
-    register: PropTypes.shape({
-        Username: PropTypes.string.isRequired,
-        Password: PropTypes.string.isRequired,
-        Email: PropTypes.string.isRequired,
-        Birthday: PropTypes.string.isRequired
-    })
-};

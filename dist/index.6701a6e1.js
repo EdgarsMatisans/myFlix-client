@@ -22920,6 +22920,7 @@ var _movieCard = require("../movie-card/movie-card");
 var _movieView = require("../movie-view/movie-view");
 var _loginView = require("../login-view/login-view");
 var _registrationView = require("../registration-view/registration-view");
+// import { NavbarView } from "../navbar-view/navbar-view";
 // import { DirectorView } from '../director-view/director-view';
 // import { GenreView } from '../genre-view/genre-view';
 // import { Userview } from '../user-view/user-view';
@@ -22993,14 +22994,14 @@ class MainView extends _reactDefault.default.Component {
         return(/*#__PURE__*/ _jsxRuntime.jsx(_reactRouterDom.BrowserRouter, {
             __source: {
                 fileName: "src/components/main-view/main-view.jsx",
-                lineNumber: 289
+                lineNumber: 290
             },
             __self: this,
             children: /*#__PURE__*/ _jsxRuntime.jsxs(_rowDefault.default, {
                 className: "main-view justify-content-md-center",
                 __source: {
                     fileName: "src/components/main-view/main-view.jsx",
-                    lineNumber: 290
+                    lineNumber: 291
                 },
                 __self: this,
                 children: [
@@ -23027,7 +23028,7 @@ class MainView extends _reactDefault.default.Component {
                         },
                         __source: {
                             fileName: "src/components/main-view/main-view.jsx",
-                            lineNumber: 291
+                            lineNumber: 292
                         },
                         __self: this
                     }),
@@ -23044,7 +23045,7 @@ class MainView extends _reactDefault.default.Component {
                         },
                         __source: {
                             fileName: "src/components/main-view/main-view.jsx",
-                            lineNumber: 313
+                            lineNumber: 314
                         },
                         __self: this
                     }),
@@ -23070,7 +23071,7 @@ class MainView extends _reactDefault.default.Component {
                         },
                         __source: {
                             fileName: "src/components/main-view/main-view.jsx",
-                            lineNumber: 325
+                            lineNumber: 326
                         },
                         __self: this
                     }),
@@ -23097,7 +23098,7 @@ class MainView extends _reactDefault.default.Component {
                         },
                         __source: {
                             fileName: "src/components/main-view/main-view.jsx",
-                            lineNumber: 347
+                            lineNumber: 348
                         },
                         __self: this
                     }),
@@ -23124,7 +23125,7 @@ class MainView extends _reactDefault.default.Component {
                         },
                         __source: {
                             fileName: "src/components/main-view/main-view.jsx",
-                            lineNumber: 373
+                            lineNumber: 374
                         },
                         __self: this
                     })
@@ -29340,14 +29341,20 @@ parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "RegistrationView", ()=>RegistrationView
 );
 var _jsxRuntime = require("react/jsx-runtime");
+var _react = require("react");
+var _reactDefault = parcelHelpers.interopDefault(_react);
 var _propTypes = require("prop-types");
 var _propTypesDefault = parcelHelpers.interopDefault(_propTypes);
 var _axios = require("axios");
 var _axiosDefault = parcelHelpers.interopDefault(_axios);
-var _react = require("react");
-var _reactDefault = parcelHelpers.interopDefault(_react);
-// React Bootstrap
+var _button = require("react-bootstrap/Button");
+var _buttonDefault = parcelHelpers.interopDefault(_button);
+var _form = require("react-bootstrap/Form");
+var _formDefault = parcelHelpers.interopDefault(_form);
+var _reactRouterDom = require("react-router-dom");
+var _reactRouterDomDefault = parcelHelpers.interopDefault(_reactRouterDom);
 var _reactBootstrap = require("react-bootstrap");
+var _reactBootstrapDefault = parcelHelpers.interopDefault(_reactBootstrap);
 var _s = $RefreshSig$();
 function RegistrationView(props) {
     _s();
@@ -29370,110 +29377,82 @@ function RegistrationView(props) {
             console.log('error registering the user');
         });
     };
-    return(/*#__PURE__*/ _jsxRuntime.jsx(_reactBootstrap.Container, {
+    return(/*#__PURE__*/ _jsxRuntime.jsx(_reactBootstrapDefault.default, {
         __source: {
             fileName: "src/components/registration-view/registration-view.jsx",
-            lineNumber: 35
+            lineNumber: 38
         },
         __self: this,
-        children: /*#__PURE__*/ _jsxRuntime.jsxs(_reactBootstrap.Form, {
+        children: /*#__PURE__*/ _jsxRuntime.jsxs(_formDefault.default, {
             __source: {
                 fileName: "src/components/registration-view/registration-view.jsx",
-                lineNumber: 36
+                lineNumber: 39
             },
             __self: this,
             children: [
-                /*#__PURE__*/ _jsxRuntime.jsxs(_reactBootstrap.Form.Group, {
-                    controlId: "formBasicEmail",
-                    __source: {
-                        fileName: "src/components/registration-view/registration-view.jsx",
-                        lineNumber: 37
-                    },
-                    __self: this,
-                    children: [
-                        /*#__PURE__*/ _jsxRuntime.jsx(_reactBootstrap.Form.Label, {
-                            __source: {
-                                fileName: "src/components/registration-view/registration-view.jsx",
-                                lineNumber: 39
-                            },
-                            __self: this,
-                            children: "Email address"
-                        }),
-                        /*#__PURE__*/ _jsxRuntime.jsx(_reactBootstrap.Form.Control, {
-                            type: "email",
-                            placeholder: "Enter email",
-                            __source: {
-                                fileName: "src/components/registration-view/registration-view.jsx",
-                                lineNumber: 42
-                            },
-                            __self: this
-                        }),
-                        /*#__PURE__*/ _jsxRuntime.jsx(_reactBootstrap.Form.Text, {
-                            className: "text-muted",
-                            __source: {
-                                fileName: "src/components/registration-view/registration-view.jsx",
-                                lineNumber: 45
-                            },
-                            __self: this,
-                            children: "We'll never share your email with anyone else."
-                        })
-                    ]
-                }),
-                /*#__PURE__*/ _jsxRuntime.jsxs(_reactBootstrap.Form.Group, {
-                    controlId: "formBasicPassword",
-                    __source: {
-                        fileName: "src/components/registration-view/registration-view.jsx",
-                        lineNumber: 51
-                    },
-                    __self: this,
-                    children: [
-                        /*#__PURE__*/ _jsxRuntime.jsx(_reactBootstrap.Form.Label, {
-                            __source: {
-                                fileName: "src/components/registration-view/registration-view.jsx",
-                                lineNumber: 53
-                            },
-                            __self: this,
-                            children: "Password"
-                        }),
-                        /*#__PURE__*/ _jsxRuntime.jsx(_reactBootstrap.Form.Control, {
-                            type: "password",
-                            placeholder: "Password",
-                            __source: {
-                                fileName: "src/components/registration-view/registration-view.jsx",
-                                lineNumber: 56
-                            },
-                            __self: this
-                        })
-                    ]
-                }),
-                /*#__PURE__*/ _jsxRuntime.jsxs(_reactBootstrap.Form.Group, {
+                /*#__PURE__*/ _jsxRuntime.jsxs(_formDefault.default.Group, {
                     controlId: "formBasicUsername",
                     __source: {
                         fileName: "src/components/registration-view/registration-view.jsx",
-                        lineNumber: 61
+                        lineNumber: 41
                     },
                     __self: this,
                     children: [
-                        /*#__PURE__*/ _jsxRuntime.jsx(_reactBootstrap.Form.Label, {
+                        /*#__PURE__*/ _jsxRuntime.jsx(_formDefault.default.Label, {
                             __source: {
                                 fileName: "src/components/registration-view/registration-view.jsx",
-                                lineNumber: 63
+                                lineNumber: 43
                             },
                             __self: this,
-                            children: "Username"
+                            children: "Username:"
                         }),
-                        /*#__PURE__*/ _jsxRuntime.jsx(_reactBootstrap.Form.Control, {
-                            type: "username",
-                            placeholder: "Username",
+                        /*#__PURE__*/ _jsxRuntime.jsx(_formDefault.default.Control, {
+                            className: "username",
+                            value: username,
+                            type: "text",
+                            placeholder: "Create Username",
+                            onChange: (e)=>setUsername(e.target.value)
+                            ,
                             __source: {
                                 fileName: "src/components/registration-view/registration-view.jsx",
-                                lineNumber: 66
+                                lineNumber: 46
                             },
                             __self: this
                         })
                     ]
                 }),
-                /*#__PURE__*/ _jsxRuntime.jsxs(_reactBootstrap.Form.Group, {
+                /*#__PURE__*/ _jsxRuntime.jsxs(_formDefault.default.Group, {
+                    controlId: "formBasicPassword",
+                    __source: {
+                        fileName: "src/components/registration-view/registration-view.jsx",
+                        lineNumber: 56
+                    },
+                    __self: this,
+                    children: [
+                        /*#__PURE__*/ _jsxRuntime.jsx(_formDefault.default.Label, {
+                            __source: {
+                                fileName: "src/components/registration-view/registration-view.jsx",
+                                lineNumber: 58
+                            },
+                            __self: this,
+                            children: "Password:"
+                        }),
+                        /*#__PURE__*/ _jsxRuntime.jsx(_formDefault.default.Control, {
+                            className: "password",
+                            value: password,
+                            type: "text",
+                            placeholder: "Create Password",
+                            onChange: (e)=>setPassword(e.target.value)
+                            ,
+                            __source: {
+                                fileName: "src/components/registration-view/registration-view.jsx",
+                                lineNumber: 61
+                            },
+                            __self: this
+                        })
+                    ]
+                }),
+                /*#__PURE__*/ _jsxRuntime.jsxs(_formDefault.default.Group, {
                     controlId: "formBasicBirthday",
                     __source: {
                         fileName: "src/components/registration-view/registration-view.jsx",
@@ -29481,17 +29460,21 @@ function RegistrationView(props) {
                     },
                     __self: this,
                     children: [
-                        /*#__PURE__*/ _jsxRuntime.jsx(_reactBootstrap.Form.Label, {
+                        /*#__PURE__*/ _jsxRuntime.jsx(_formDefault.default.Label, {
                             __source: {
                                 fileName: "src/components/registration-view/registration-view.jsx",
                                 lineNumber: 73
                             },
                             __self: this,
-                            children: "Birthday"
+                            children: "Birthday:"
                         }),
-                        /*#__PURE__*/ _jsxRuntime.jsx(_reactBootstrap.Form.Control, {
-                            type: "birthday",
-                            placeholder: "Birthday",
+                        /*#__PURE__*/ _jsxRuntime.jsx(_formDefault.default.Control, {
+                            className: "birthday",
+                            value: birthday,
+                            type: "date",
+                            placeholder: "Enter Birthday",
+                            onChange: (e)=>setBirthday(e.target.value)
+                            ,
                             __source: {
                                 fileName: "src/components/registration-view/registration-view.jsx",
                                 lineNumber: 76
@@ -29500,29 +29483,69 @@ function RegistrationView(props) {
                         })
                     ]
                 }),
-                /*#__PURE__*/ _jsxRuntime.jsx(_reactBootstrap.Form.Group, {
+                /*#__PURE__*/ _jsxRuntime.jsxs(_formDefault.default.Group, {
+                    controlId: "formBasicEmail",
+                    __source: {
+                        fileName: "src/components/registration-view/registration-view.jsx",
+                        lineNumber: 86
+                    },
+                    __self: this,
+                    children: [
+                        /*#__PURE__*/ _jsxRuntime.jsx(_formDefault.default.Label, {
+                            __source: {
+                                fileName: "src/components/registration-view/registration-view.jsx",
+                                lineNumber: 88
+                            },
+                            __self: this,
+                            children: "Email:"
+                        }),
+                        /*#__PURE__*/ _jsxRuntime.jsx(_formDefault.default.Control, {
+                            className: "email",
+                            value: email,
+                            type: "email",
+                            placeholder: "Enter Email",
+                            onChange: (e)=>setEmail(e.target.value)
+                            ,
+                            __source: {
+                                fileName: "src/components/registration-view/registration-view.jsx",
+                                lineNumber: 91
+                            },
+                            __self: this
+                        }),
+                        /*#__PURE__*/ _jsxRuntime.jsx(_formDefault.default.Text, {
+                            className: "text-muted",
+                            __source: {
+                                fileName: "src/components/registration-view/registration-view.jsx",
+                                lineNumber: 99
+                            },
+                            __self: this,
+                            children: "We'll never share your email with anyone else."
+                        })
+                    ]
+                }),
+                /*#__PURE__*/ _jsxRuntime.jsx(_formDefault.default.Group, {
                     controlId: "formBasicCheckbox",
                     __source: {
                         fileName: "src/components/registration-view/registration-view.jsx",
-                        lineNumber: 81
+                        lineNumber: 105
                     },
                     __self: this,
-                    children: /*#__PURE__*/ _jsxRuntime.jsx(_reactBootstrap.Form.Check, {
+                    children: /*#__PURE__*/ _jsxRuntime.jsx(_formDefault.default.Check, {
                         type: "checkbox",
                         label: "Check me out",
                         __source: {
                             fileName: "src/components/registration-view/registration-view.jsx",
-                            lineNumber: 83
+                            lineNumber: 107
                         },
                         __self: this
                     })
                 }),
-                /*#__PURE__*/ _jsxRuntime.jsx(_reactBootstrap.Button, {
+                /*#__PURE__*/ _jsxRuntime.jsx(_buttonDefault.default, {
                     variant: "primary",
                     type: "submit",
                     __source: {
                         fileName: "src/components/registration-view/registration-view.jsx",
-                        lineNumber: 88
+                        lineNumber: 112
                     },
                     __self: this,
                     children: "Submit"
@@ -29533,14 +29556,6 @@ function RegistrationView(props) {
 }
 _s(RegistrationView, "tdA1KK8yaZidqYo0wscqshHt/KE=");
 _c = RegistrationView;
-RegistrationView.propTypes = {
-    register: _propTypesDefault.default.shape({
-        Username: _propTypesDefault.default.string.isRequired,
-        Password: _propTypesDefault.default.string.isRequired,
-        Email: _propTypesDefault.default.string.isRequired,
-        Birthday: _propTypesDefault.default.string.isRequired
-    })
-};
 var _c;
 $RefreshReg$(_c, "RegistrationView");
 
@@ -29549,7 +29564,7 @@ $RefreshReg$(_c, "RegistrationView");
   window.$RefreshReg$ = prevRefreshReg;
   window.$RefreshSig$ = prevRefreshSig;
 }
-},{"react/jsx-runtime":"8xIwr","prop-types":"1tgq3","axios":"iYoWk","react":"6TuXu","react-bootstrap":"h2YVd","@parcel/transformer-js/src/esmodule-helpers.js":"JacNc","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"5V79J"}],"h2YVd":[function(require,module,exports) {
+},{"react/jsx-runtime":"8xIwr","prop-types":"1tgq3","axios":"iYoWk","react":"6TuXu","@parcel/transformer-js/src/esmodule-helpers.js":"JacNc","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"5V79J","react-bootstrap/Button":"9CzHT","react-bootstrap/Form":"5ykgY","react-router-dom":"cpyQW","react-bootstrap":"h2YVd"}],"h2YVd":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "Accordion", ()=>_accordionDefault.default
