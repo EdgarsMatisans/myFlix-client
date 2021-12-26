@@ -18,8 +18,10 @@
   "homepage": "https://github.com/EdgarsMatisans/myFlix-client#readme",
   "description": "",
   "dependencies": {
+    "@parcel/compressor-raw": "^2.0.1",
+    "@parcel/core": "^2.0.1",
     "axios": "^0.24.0",
-    "parcel": "^2.0.0-rc.0",
+    "parcel": "^2.0.1",
     "prop-types": "^15.8.0",
     "react": "^17.0.2",
     "react-bootstrap": "^2.0.4",
@@ -32,6 +34,6 @@
     "typescript": "^4.5.4"
   },
   "devDependencies": {
-    "@parcel/transformer-sass": "^2.0.0-rc.0"
+    "@parcel/transformer-sass": "^2.0.1"
   }
 }

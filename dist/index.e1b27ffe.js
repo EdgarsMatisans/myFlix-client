@@ -27222,28 +27222,40 @@ var index = _reactDefault.default.createContext || createReactContext;
 exports.default = index;
 
 },{"react":"4mchR","@babel/runtime/helpers/esm/inheritsLoose":"6cZja","prop-types":"2bysO","tiny-warning":"eDUdC","@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV"}],"2bysO":[function(require,module,exports) {
-var REACT_ELEMENT_TYPE = typeof Symbol === 'function' && Symbol.for && Symbol.for('react.element') || 60103;
-var isValidElement = function(object) {
-    return typeof object === 'object' && object !== null && object.$$typeof === REACT_ELEMENT_TYPE;
-};
+var ReactIs = require('react-is');
 // By explicitly using `prop-types` you are opting into new development behavior.
 // http://fb.me/prop-types-in-prod
 var throwOnDirectAccess = true;
-module.exports = require('./factoryWithTypeCheckers')(isValidElement, throwOnDirectAccess);
+module.exports = require('./factoryWithTypeCheckers')(ReactIs.isElement, throwOnDirectAccess);
 
-},{"./factoryWithTypeCheckers":"3o4sw"}],"3o4sw":[function(require,module,exports) {
+},{"./factoryWithTypeCheckers":"3o4sw","react-is":"5KyfE"}],"3o4sw":[function(require,module,exports) {
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */ 'use strict';
-var emptyFunction = require('fbjs/lib/emptyFunction');
-var invariant = require('fbjs/lib/invariant');
-var warning = require('fbjs/lib/warning');
+var ReactIs = require('react-is');
 var assign = require('object-assign');
 var ReactPropTypesSecret = require('./lib/ReactPropTypesSecret');
+var has = require('./lib/has');
 var checkPropTypes = require('./checkPropTypes');
+var printWarning = function() {
+};
+printWarning = function(text) {
+    var message = 'Warning: ' + text;
+    if (typeof console !== 'undefined') console.error(message);
+    try {
+        // --- Welcome to debugging React ---
+        // This error was thrown as a convenience so that you can use this stack
+        // to find the callsite that caused this warning to fire.
+        throw new Error(message);
+    } catch (x) {
+    }
+};
+function emptyFunctionThatReturnsNull() {
+    return null;
+}
 module.exports = function(isValidElement, throwOnDirectAccess) {
     /* global Symbol */ var ITERATOR_SYMBOL = typeof Symbol === 'function' && Symbol.iterator;
     var FAUX_ITERATOR_SYMBOL = '@@iterator'; // Before Symbol spec.
@@ -27314,6 +27326,7 @@ module.exports = function(isValidElement, throwOnDirectAccess) {
     // Keep this list in sync with production version in `./factoryWithThrowingShims.js`.
     var ReactPropTypes = {
         array: createPrimitiveTypeChecker('array'),
+        bigint: createPrimitiveTypeChecker('bigint'),
         bool: createPrimitiveTypeChecker('boolean'),
         func: createPrimitiveTypeChecker('function'),
         number: createPrimitiveTypeChecker('number'),
@@ -27323,6 +27336,7 @@ module.exports = function(isValidElement, throwOnDirectAccess) {
         any: createAnyTypeChecker(),
         arrayOf: createArrayOfTypeChecker,
         element: createElementTypeChecker(),
+        elementType: createElementTypeTypeChecker(),
         instanceOf: createInstanceTypeChecker,
         node: createNodeChecker(),
         objectOf: createObjectOfTypeChecker,
@@ -27348,8 +27362,10 @@ module.exports = function(isValidElement, throwOnDirectAccess) {
    * Errors anymore. We don't inspect their stack anyway, and creating them
    * is prohibitively expensive if they are created too often, such as what
    * happens in oneOfType() for any type before the one that matched.
-   */ function PropTypeError(message) {
+   */ function PropTypeError(message, data) {
         this.message = message;
+        this.data = data && typeof data === 'object' ? data : {
+        };
         this.stack = '';
     }
     // Make `instanceof Error` still work for returned errors.
@@ -27362,14 +27378,17 @@ module.exports = function(isValidElement, throwOnDirectAccess) {
             componentName = componentName || ANONYMOUS;
             propFullName = propFullName || propName;
             if (secret !== ReactPropTypesSecret) {
-                if (throwOnDirectAccess) // New behavior only for users of `prop-types` package
-                invariant(false, "Calling PropTypes validators directly is not supported by the `prop-types` package. Use `PropTypes.checkPropTypes()` to call them. Read more at http://fb.me/use-check-prop-types");
-                else if (typeof console !== 'undefined') {
+                if (throwOnDirectAccess) {
+                    // New behavior only for users of `prop-types` package
+                    var err = new Error("Calling PropTypes validators directly is not supported by the `prop-types` package. Use `PropTypes.checkPropTypes()` to call them. Read more at http://fb.me/use-check-prop-types");
+                    err.name = 'Invariant Violation';
+                    throw err;
+                } else if (typeof console !== 'undefined') {
                     // Old behavior for people using React.PropTypes
                     var cacheKey = componentName + ':' + propName;
                     if (!manualPropTypeCallCache[cacheKey] && // Avoid spamming the console because they are often not actionable except for lib authors
                     manualPropTypeWarningCount < 3) {
-                        warning(false, "You are manually calling a React.PropTypes validation function for the `%s` prop on `%s`. This is deprecated and will throw in the standalone `prop-types` package. You may be seeing this warning due to a third-party PropTypes library. See https://fb.me/react-warning-dont-call-proptypes for details.", propFullName, componentName);
+                        printWarning("You are manually calling a React.PropTypes validation function for the `" + propFullName + '` prop on `' + componentName + '`. This is deprecated ' + 'and will throw in the standalone `prop-types` package. ' + 'You may be seeing this warning due to a third-party PropTypes ' + 'library. See https://fb.me/react-warning-dont-call-proptypes ' + 'for details.');
                         manualPropTypeCallCache[cacheKey] = true;
                         manualPropTypeWarningCount++;
                     }
@@ -27396,14 +27415,16 @@ module.exports = function(isValidElement, throwOnDirectAccess) {
                 // check, but we can offer a more precise error message here rather than
                 // 'of type `object`'.
                 var preciseType = getPreciseType(propValue);
-                return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` of type ' + ('`' + preciseType + '` supplied to `' + componentName + '`, expected ') + ('`' + expectedType + '`.'));
+                return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` of type ' + ('`' + preciseType + '` supplied to `' + componentName + '`, expected ') + ('`' + expectedType + '`.'), {
+                    expectedType: expectedType
+                });
             }
             return null;
         }
         return createChainableTypeChecker(validate);
     }
     function createAnyTypeChecker() {
-        return createChainableTypeChecker(emptyFunction.thatReturnsNull);
+        return createChainableTypeChecker(emptyFunctionThatReturnsNull);
     }
     function createArrayOfTypeChecker(typeChecker) {
         function validate(props, propName, componentName, location, propFullName) {
@@ -27432,6 +27453,17 @@ module.exports = function(isValidElement, throwOnDirectAccess) {
         }
         return createChainableTypeChecker(validate);
     }
+    function createElementTypeTypeChecker() {
+        function validate(props, propName, componentName, location, propFullName) {
+            var propValue = props[propName];
+            if (!ReactIs.isValidElementType(propValue)) {
+                var propType = getPropType(propValue);
+                return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` of type ' + ('`' + propType + '` supplied to `' + componentName + '`, expected a single ReactElement type.'));
+            }
+            return null;
+        }
+        return createChainableTypeChecker(validate);
+    }
     function createInstanceTypeChecker(expectedClass) {
         function validate(props, propName, componentName, location, propFullName) {
             if (!(props[propName] instanceof expectedClass)) {
@@ -27445,16 +27477,23 @@ module.exports = function(isValidElement, throwOnDirectAccess) {
     }
     function createEnumTypeChecker(expectedValues) {
         if (!Array.isArray(expectedValues)) {
-            warning(false, 'Invalid argument supplied to oneOf, expected an instance of array.');
-            return emptyFunction.thatReturnsNull;
+            {
+                if (arguments.length > 1) printWarning('Invalid arguments supplied to oneOf, expected an array, got ' + arguments.length + ' arguments. ' + 'A common mistake is to write oneOf(x, y, z) instead of oneOf([x, y, z]).');
+                else printWarning('Invalid argument supplied to oneOf, expected an array.');
+            }
+            return emptyFunctionThatReturnsNull;
         }
         function validate(props, propName, componentName, location, propFullName) {
             var propValue = props[propName];
             for(var i = 0; i < expectedValues.length; i++){
                 if (is(propValue, expectedValues[i])) return null;
             }
-            var valuesString = JSON.stringify(expectedValues);
-            return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` of value `' + propValue + '` ' + ('supplied to `' + componentName + '`, expected one of ' + valuesString + '.'));
+            var valuesString = JSON.stringify(expectedValues, function replacer(key, value) {
+                var type = getPreciseType(value);
+                if (type === 'symbol') return String(value);
+                return value;
+            });
+            return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` of value `' + String(propValue) + '` ' + ('supplied to `' + componentName + '`, expected one of ' + valuesString + '.'));
         }
         return createChainableTypeChecker(validate);
     }
@@ -27464,7 +27503,7 @@ module.exports = function(isValidElement, throwOnDirectAccess) {
             var propValue = props[propName];
             var propType = getPropType(propValue);
             if (propType !== 'object') return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` of type ' + ('`' + propType + '` supplied to `' + componentName + '`, expected an object.'));
-            for(var key in propValue)if (propValue.hasOwnProperty(key)) {
+            for(var key in propValue)if (has(propValue, key)) {
                 var error = typeChecker(propValue, key, componentName, location, propFullName + '.' + key, ReactPropTypesSecret);
                 if (error instanceof Error) return error;
             }
@@ -27474,22 +27513,26 @@ module.exports = function(isValidElement, throwOnDirectAccess) {
     }
     function createUnionTypeChecker(arrayOfTypeCheckers) {
         if (!Array.isArray(arrayOfTypeCheckers)) {
-            warning(false, 'Invalid argument supplied to oneOfType, expected an instance of array.');
-            return emptyFunction.thatReturnsNull;
+            printWarning('Invalid argument supplied to oneOfType, expected an instance of array.');
+            return emptyFunctionThatReturnsNull;
         }
         for(var i1 = 0; i1 < arrayOfTypeCheckers.length; i1++){
             var checker = arrayOfTypeCheckers[i1];
             if (typeof checker !== 'function') {
-                warning(false, "Invalid argument supplied to oneOfType. Expected an array of check functions, but received %s at index %s.", getPostfixForTypeWarning(checker), i1);
-                return emptyFunction.thatReturnsNull;
+                printWarning("Invalid argument supplied to oneOfType. Expected an array of check functions, but received " + getPostfixForTypeWarning(checker) + ' at index ' + i1 + '.');
+                return emptyFunctionThatReturnsNull;
             }
         }
         function validate(props, propName, componentName, location, propFullName) {
+            var expectedTypes = [];
             for(var i = 0; i < arrayOfTypeCheckers.length; i++){
                 var checker = arrayOfTypeCheckers[i];
-                if (checker(props, propName, componentName, location, propFullName, ReactPropTypesSecret) == null) return null;
+                var checkerResult = checker(props, propName, componentName, location, propFullName, ReactPropTypesSecret);
+                if (checkerResult == null) return null;
+                if (checkerResult.data.hasOwnProperty('expectedType')) expectedTypes.push(checkerResult.data.expectedType);
             }
-            return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` supplied to ' + ('`' + componentName + '`.'));
+            var expectedTypesMessage = expectedTypes.length > 0 ? ', expected one of type [' + expectedTypes.join(', ') + ']' : '';
+            return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` supplied to ' + ('`' + componentName + '`' + expectedTypesMessage + '.'));
         }
         return createChainableTypeChecker(validate);
     }
@@ -27500,6 +27543,9 @@ module.exports = function(isValidElement, throwOnDirectAccess) {
         }
         return createChainableTypeChecker(validate);
     }
+    function invalidValidatorError(componentName, location, propFullName, key, type) {
+        return new PropTypeError((componentName || 'React class') + ': ' + location + ' type `' + propFullName + '.' + key + '` is invalid; ' + 'it must be a function, usually from the `prop-types` package, but received `' + type + '`.');
+    }
     function createShapeTypeChecker(shapeTypes) {
         function validate(props, propName, componentName, location, propFullName) {
             var propValue = props[propName];
@@ -27507,7 +27553,7 @@ module.exports = function(isValidElement, throwOnDirectAccess) {
             if (propType !== 'object') return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` of type `' + propType + '` ' + ('supplied to `' + componentName + '`, expected `object`.'));
             for(var key in shapeTypes){
                 var checker = shapeTypes[key];
-                if (!checker) continue;
+                if (typeof checker !== 'function') return invalidValidatorError(componentName, location, propFullName, key, getPreciseType(checker));
                 var error = checker(propValue, key, componentName, location, propFullName + '.' + key, ReactPropTypesSecret);
                 if (error) return error;
             }
@@ -27520,12 +27566,12 @@ module.exports = function(isValidElement, throwOnDirectAccess) {
             var propValue = props[propName];
             var propType = getPropType(propValue);
             if (propType !== 'object') return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` of type `' + propType + '` ' + ('supplied to `' + componentName + '`, expected `object`.'));
-            // We need to check all keys in case some are required but missing from
-            // props.
+            // We need to check all keys in case some are required but missing from props.
             var allKeys = assign({
             }, props[propName], shapeTypes);
             for(var key in allKeys){
                 var checker = shapeTypes[key];
+                if (has(shapeTypes, key) && typeof checker !== 'function') return invalidValidatorError(componentName, location, propFullName, key, getPreciseType(checker));
                 if (!checker) return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` key `' + key + '` supplied to `' + componentName + '`.' + '\nBad object: ' + JSON.stringify(props[propName], null, '  ') + '\nValid keys: ' + JSON.stringify(Object.keys(shapeTypes), null, '  '));
                 var error = checker(propValue, key, componentName, location, propFullName + '.' + key, ReactPropTypesSecret);
                 if (error) return error;
@@ -27568,6 +27614,8 @@ module.exports = function(isValidElement, throwOnDirectAccess) {
     function isSymbol(propType, propValue) {
         // Native Symbol.
         if (propType === 'symbol') return true;
+        // falsy value can't be a Symbol
+        if (!propValue) return false;
         // 19.4.3.5 Symbol.prototype[@@toStringTag] === 'Symbol'
         if (propValue['@@toStringTag'] === 'Symbol') return true;
         // Fallback for non-spec compliant Symbols which are polyfilled.
@@ -27618,133 +27666,12 @@ module.exports = function(isValidElement, throwOnDirectAccess) {
         return propValue.constructor.name;
     }
     ReactPropTypes.checkPropTypes = checkPropTypes;
+    ReactPropTypes.resetWarningCache = checkPropTypes.resetWarningCache;
     ReactPropTypes.PropTypes = ReactPropTypes;
     return ReactPropTypes;
 };
 
-},{"fbjs/lib/emptyFunction":"8DI5z","fbjs/lib/invariant":"iaCBs","fbjs/lib/warning":"7rSyX","object-assign":"iUUFa","./lib/ReactPropTypesSecret":"bQ0BL","./checkPropTypes":"aGXhS"}],"8DI5z":[function(require,module,exports) {
-"use strict";
-/**
- * Copyright (c) 2013-present, Facebook, Inc.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- *
- * 
- */ function makeEmptyFunction(arg) {
-    return function() {
-        return arg;
-    };
-}
-/**
- * This function accepts and discards inputs; it has no side effects. This is
- * primarily useful idiomatically for overridable function endpoints which
- * always need to be callable, since JS lacks a null-call idiom ala Cocoa.
- */ var emptyFunction = function emptyFunction() {
-};
-emptyFunction.thatReturns = makeEmptyFunction;
-emptyFunction.thatReturnsFalse = makeEmptyFunction(false);
-emptyFunction.thatReturnsTrue = makeEmptyFunction(true);
-emptyFunction.thatReturnsNull = makeEmptyFunction(null);
-emptyFunction.thatReturnsThis = function() {
-    return this;
-};
-emptyFunction.thatReturnsArgument = function(arg) {
-    return arg;
-};
-module.exports = emptyFunction;
-
-},{}],"iaCBs":[function(require,module,exports) {
-/**
- * Copyright (c) 2013-present, Facebook, Inc.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- *
- */ 'use strict';
-/**
- * Use invariant() to assert state which your program assumes to be true.
- *
- * Provide sprintf-style format (only %s is supported) and arguments
- * to provide information about what broke and what you were
- * expecting.
- *
- * The invariant message will be stripped in production, but the invariant
- * will remain to ensure logic does not differ in production.
- */ var validateFormat = function validateFormat(format) {
-};
-validateFormat = function validateFormat(format) {
-    if (format === undefined) throw new Error('invariant requires an error message argument');
-};
-function invariant(condition, format, a, b, c, d, e, f) {
-    validateFormat(format);
-    if (!condition) {
-        var error;
-        if (format === undefined) error = new Error("Minified exception occurred; use the non-minified dev environment for the full error message and additional helpful warnings.");
-        else {
-            var args = [
-                a,
-                b,
-                c,
-                d,
-                e,
-                f
-            ];
-            var argIndex = 0;
-            error = new Error(format.replace(/%s/g, function() {
-                return args[argIndex++];
-            }));
-            error.name = 'Invariant Violation';
-        }
-        error.framesToPop = 1; // we don't care about invariant's own frame
-        throw error;
-    }
-}
-module.exports = invariant;
-
-},{}],"7rSyX":[function(require,module,exports) {
-/**
- * Copyright (c) 2014-present, Facebook, Inc.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- *
- */ 'use strict';
-var emptyFunction = require('./emptyFunction');
-/**
- * Similar to invariant but only logs a warning if the condition is not met.
- * This can be used to log issues in development environments in critical
- * paths. Removing the logging code for production environments will keep the
- * same logic and follow the same code paths.
- */ var warning = emptyFunction;
-var printWarning = function printWarning(format) {
-    for(var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++)args[_key - 1] = arguments[_key];
-    var argIndex = 0;
-    var message = 'Warning: ' + format.replace(/%s/g, function() {
-        return args[argIndex++];
-    });
-    if (typeof console !== 'undefined') console.error(message);
-    try {
-        // --- Welcome to debugging React ---
-        // This error was thrown as a convenience so that you can use this stack
-        // to find the callsite that caused this warning to fire.
-        throw new Error(message);
-    } catch (x) {
-    }
-};
-warning = function warning(condition, format) {
-    if (format === undefined) throw new Error("`warning(condition, format, ...args)` requires a warning message argument");
-    if (format.indexOf('Failed Composite propType: ') === 0) return; // Ignore CompositeComponent proptype check.
-    if (!condition) {
-        for(var _len2 = arguments.length, args = Array(_len2 > 2 ? _len2 - 2 : 0), _key2 = 2; _key2 < _len2; _key2++)args[_key2 - 2] = arguments[_key2];
-        printWarning.apply(undefined, [
-            format
-        ].concat(args));
-    }
-};
-module.exports = warning;
-
-},{"./emptyFunction":"8DI5z"}],"bQ0BL":[function(require,module,exports) {
+},{"react-is":"5KyfE","object-assign":"iUUFa","./lib/ReactPropTypesSecret":"bQ0BL","./lib/has":"fM5kX","./checkPropTypes":"aGXhS"}],"bQ0BL":[function(require,module,exports) {
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
  *
@@ -27754,6 +27681,9 @@ module.exports = warning;
 var ReactPropTypesSecret = 'SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED';
 module.exports = ReactPropTypesSecret;
 
+},{}],"fM5kX":[function(require,module,exports) {
+module.exports = Function.call.bind(Object.prototype.hasOwnProperty);
+
 },{}],"aGXhS":[function(require,module,exports) {
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
@@ -27761,10 +27691,22 @@ module.exports = ReactPropTypesSecret;
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */ 'use strict';
-var invariant = require('fbjs/lib/invariant');
-var warning = require('fbjs/lib/warning');
+var printWarning = function() {
+};
 var ReactPropTypesSecret = require('./lib/ReactPropTypesSecret');
 var loggedTypeFailures = {
+};
+var has = require('./lib/has');
+printWarning = function(text) {
+    var message = 'Warning: ' + text;
+    if (typeof console !== 'undefined') console.error(message);
+    try {
+        // --- Welcome to debugging React ---
+        // This error was thrown as a convenience so that you can use this stack
+        // to find the callsite that caused this warning to fire.
+        throw new Error(message);
+    } catch (x) {
+    }
 };
 /**
  * Assert that the values match with the type specs.
@@ -27777,7 +27719,7 @@ var loggedTypeFailures = {
  * @param {?Function} getStack Returns the component stack.
  * @private
  */ function checkPropTypes(typeSpecs, values, location, componentName, getStack) {
-    for(var typeSpecName in typeSpecs)if (typeSpecs.hasOwnProperty(typeSpecName)) {
+    for(var typeSpecName in typeSpecs)if (has(typeSpecs, typeSpecName)) {
         var error;
         // Prop type validation may throw. In case they do, we don't want to
         // fail the render phase where it didn't fail before. So we log it.
@@ -27785,24 +27727,36 @@ var loggedTypeFailures = {
         try {
             // This is intentionally an invariant that gets caught. It's the same
             // behavior as without this statement except with a better message.
-            invariant(typeof typeSpecs[typeSpecName] === 'function', "%s: %s type `%s` is invalid; it must be a function, usually from the `prop-types` package, but received `%s`.", componentName || 'React class', location, typeSpecName, typeof typeSpecs[typeSpecName]);
+            if (typeof typeSpecs[typeSpecName] !== 'function') {
+                var err = Error((componentName || 'React class') + ': ' + location + ' type `' + typeSpecName + '` is invalid; ' + 'it must be a function, usually from the `prop-types` package, but received `' + typeof typeSpecs[typeSpecName] + '`.' + 'This often happens because of typos such as `PropTypes.function` instead of `PropTypes.func`.');
+                err.name = 'Invariant Violation';
+                throw err;
+            }
             error = typeSpecs[typeSpecName](values, typeSpecName, componentName, location, null, ReactPropTypesSecret);
         } catch (ex) {
             error = ex;
         }
-        warning(!error || error instanceof Error, "%s: type specification of %s `%s` is invalid; the type checker function must return `null` or an `Error` but returned a %s. You may have forgotten to pass an argument to the type checker creator (arrayOf, instanceOf, objectOf, oneOf, oneOfType, and shape all require an argument).", componentName || 'React class', location, typeSpecName, typeof error);
+        if (error && !(error instanceof Error)) printWarning((componentName || 'React class') + ': type specification of ' + location + ' `' + typeSpecName + '` is invalid; the type checker ' + 'function must return `null` or an `Error` but returned a ' + typeof error + '. ' + 'You may have forgotten to pass an argument to the type checker ' + 'creator (arrayOf, instanceOf, objectOf, oneOf, oneOfType, and ' + 'shape all require an argument).');
         if (error instanceof Error && !(error.message in loggedTypeFailures)) {
             // Only monitor this failure once because there tends to be a lot of the
             // same error.
             loggedTypeFailures[error.message] = true;
             var stack = getStack ? getStack() : '';
-            warning(false, 'Failed %s type: %s%s', location, error.message, stack != null ? stack : '');
+            printWarning('Failed ' + location + ' type: ' + error.message + (stack != null ? stack : ''));
         }
     }
 }
+/**
+ * Resets warning cache when testing.
+ *
+ * @private
+ */ checkPropTypes.resetWarningCache = function() {
+    loggedTypeFailures = {
+    };
+};
 module.exports = checkPropTypes;
 
-},{"fbjs/lib/invariant":"iaCBs","fbjs/lib/warning":"7rSyX","./lib/ReactPropTypesSecret":"bQ0BL"}],"aN7wA":[function(require,module,exports) {
+},{"./lib/ReactPropTypesSecret":"bQ0BL","./lib/has":"fM5kX"}],"aN7wA":[function(require,module,exports) {
 var isarray = require('isarray');
 /**
  * Expose `pathToRegexp`.
@@ -29616,6 +29570,12 @@ var _button = require("react-bootstrap/Button");
 var _buttonDefault = parcelHelpers.interopDefault(_button);
 var _axios = require("axios");
 var _axiosDefault = parcelHelpers.interopDefault(_axios);
+var _propTypes = require("prop-types");
+var _propTypesDefault = parcelHelpers.interopDefault(_propTypes);
+var _reactRouterDom = require("react-router-dom");
+var _reactBootstrap = require("react-bootstrap");
+var _reactRedux = require("react-redux");
+var _loginViewScss = require("./login-view.scss");
 var _s = $RefreshSig$();
 function LoginView(props) {
     _s();
@@ -29636,7 +29596,7 @@ function LoginView(props) {
     return(/*#__PURE__*/ _jsxRuntime.jsxs(_formDefault.default, {
         __source: {
             fileName: "src/components/login-view/login-view.jsx",
-            lineNumber: 28,
+            lineNumber: 36,
             columnNumber: 9
         },
         __self: this,
@@ -29645,7 +29605,7 @@ function LoginView(props) {
                 controlId: "formUsername",
                 __source: {
                     fileName: "src/components/login-view/login-view.jsx",
-                    lineNumber: 29,
+                    lineNumber: 37,
                     columnNumber: 13
                 },
                 __self: this,
@@ -29653,7 +29613,7 @@ function LoginView(props) {
                     /*#__PURE__*/ _jsxRuntime.jsx(_formDefault.default.Label, {
                         __source: {
                             fileName: "src/components/login-view/login-view.jsx",
-                            lineNumber: 30,
+                            lineNumber: 39,
                             columnNumber: 17
                         },
                         __self: this,
@@ -29667,7 +29627,7 @@ function LoginView(props) {
                         ,
                         __source: {
                             fileName: "src/components/login-view/login-view.jsx",
-                            lineNumber: 31,
+                            lineNumber: 42,
                             columnNumber: 17
                         },
                         __self: this
@@ -29678,7 +29638,7 @@ function LoginView(props) {
                 controlId: "formPassword",
                 __source: {
                     fileName: "src/components/login-view/login-view.jsx",
-                    lineNumber: 34,
+                    lineNumber: 50,
                     columnNumber: 13
                 },
                 __self: this,
@@ -29686,7 +29646,7 @@ function LoginView(props) {
                     /*#__PURE__*/ _jsxRuntime.jsx(_formDefault.default.Label, {
                         __source: {
                             fileName: "src/components/login-view/login-view.jsx",
-                            lineNumber: 35,
+                            lineNumber: 52,
                             columnNumber: 17
                         },
                         __self: this,
@@ -29700,7 +29660,7 @@ function LoginView(props) {
                         ,
                         __source: {
                             fileName: "src/components/login-view/login-view.jsx",
-                            lineNumber: 36,
+                            lineNumber: 55,
                             columnNumber: 17
                         },
                         __self: this
@@ -29711,7 +29671,7 @@ function LoginView(props) {
                 className: "buttons-login",
                 __source: {
                     fileName: "src/components/login-view/login-view.jsx",
-                    lineNumber: 38,
+                    lineNumber: 62,
                     columnNumber: 13
                 },
                 __self: this,
@@ -29724,7 +29684,7 @@ function LoginView(props) {
                         type: "button",
                         __source: {
                             fileName: "src/components/login-view/login-view.jsx",
-                            lineNumber: 39,
+                            lineNumber: 64,
                             columnNumber: 17
                         },
                         __self: this,
@@ -29736,11 +29696,11 @@ function LoginView(props) {
                         onClick: handleSubmit,
                         __source: {
                             fileName: "src/components/login-view/login-view.jsx",
-                            lineNumber: 40,
+                            lineNumber: 70,
                             columnNumber: 17
                         },
                         __self: this,
-                        children: "Submit"
+                        children: "Login"
                     })
                 ]
             })
@@ -29749,6 +29709,11 @@ function LoginView(props) {
 }
 _s(LoginView, "wuQOK7xaXdVz4RMrZQhWbI751Oc=");
 _c = LoginView;
+const mapDispatchToProps = (dispatch)=>({
+        handleSubmit: (username, password)=>dispatch(handleSubmit(username, password))
+    })
+;
+exports.default = _reactRedux.connect(null, mapDispatchToProps)(LoginView);
 var _c;
 $RefreshReg$(_c, "LoginView");
 
@@ -29757,7 +29722,7 @@ $RefreshReg$(_c, "LoginView");
   window.$RefreshReg$ = prevRefreshReg;
   window.$RefreshSig$ = prevRefreshSig;
 }
-},{"react/jsx-runtime":"6Ds2u","react":"4mchR","react-bootstrap/Form":"PeiIB","react-bootstrap/Button":"64Pgd","axios":"1IeuP","@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"9pz13"}],"PeiIB":[function(require,module,exports) {
+},{"react/jsx-runtime":"6Ds2u","react":"4mchR","react-bootstrap/Form":"PeiIB","react-bootstrap/Button":"64Pgd","axios":"1IeuP","@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"9pz13","prop-types":"2bysO","react-router-dom":"etVME","react-bootstrap":"9qMdX","react-redux":"lT3ms","./login-view.scss":"hONex"}],"PeiIB":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 var _classnames = require("classnames");
@@ -30889,336 +30854,7 @@ const FloatingLabel = /*#__PURE__*/ _react.forwardRef(({ bsPrefix , className , 
 FloatingLabel.displayName = 'FloatingLabel';
 exports.default = FloatingLabel;
 
-},{"classnames":"2cVcN","react":"4mchR","./FormGroup":"6eZW8","./ThemeProvider":"oG7Uz","react/jsx-runtime":"6Ds2u","@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV"}],"lGbHG":[function(require,module,exports) {
-var $parcel$ReactRefreshHelpers$00e7 = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
-var prevRefreshReg = window.$RefreshReg$;
-var prevRefreshSig = window.$RefreshSig$;
-$parcel$ReactRefreshHelpers$00e7.prelude(module);
-
-try {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-// SCSS Import
-// import "./registration-view.scss"
-parcelHelpers.export(exports, "RegistrationView", ()=>RegistrationView
-);
-var _jsxRuntime = require("react/jsx-runtime");
-var _react = require("react");
-var _reactDefault = parcelHelpers.interopDefault(_react);
-var _propTypes = require("prop-types");
-var _propTypesDefault = parcelHelpers.interopDefault(_propTypes);
-var _axios = require("axios");
-var _axiosDefault = parcelHelpers.interopDefault(_axios);
-var _button = require("react-bootstrap/Button");
-var _buttonDefault = parcelHelpers.interopDefault(_button);
-var _form = require("react-bootstrap/Form");
-var _formDefault = parcelHelpers.interopDefault(_form);
-var _reactRouterDom = require("react-router-dom");
-var _reactRouterDomDefault = parcelHelpers.interopDefault(_reactRouterDom);
-var _reactBootstrap = require("react-bootstrap");
-var _reactBootstrapDefault = parcelHelpers.interopDefault(_reactBootstrap);
-var _s = $RefreshSig$();
-function RegistrationView(props) {
-    _s();
-    const [username, setUsername] = _react.useState('');
-    const [password, setPassword] = _react.useState('');
-    const [email, setEmail] = _react.useState('');
-    const [birthday, setBirthday] = _react.useState('');
-    const [usernameError1, setUsernameError] = _react.useState({
-    });
-    const [passwordError1, setPasswordError] = _react.useState({
-    });
-    const [emailError1, setEmailError] = _react.useState({
-    });
-    const [birthdateError1, setBirthdateError] = _react.useState({
-    });
-    const handleSubmit = (e)=>{
-        e.preventDefault();
-        _axiosDefault.default.post('https://mysterious-refuge-92228.herokuapp.com/users', {
-            Username: username,
-            Password: password,
-            Email: email,
-            Birthday: birthday
-        }).then((response)=>{
-            const data = response.data;
-            console.log(data);
-            window.open('/', '_self');
-        }).catch(function(error) {
-            console.log('error registering the user');
-        });
-    };
-    const formValidation = ()=>{
-        let usernameError = {
-        };
-        let passwordError = {
-        };
-        let emailError = {
-        };
-        let birthdateError = {
-        };
-        let isValid = true;
-        if (username === '') {
-            usernameError.usernameEmpty = "Please enter your username.";
-            isValid = false;
-        }
-        if (username.trim().length < 5) {
-            usernameError.usernameShort = "Username needs to be at least 5 characters long.";
-            isValid = false;
-        }
-        if (password.trim().length < 5) {
-            passwordError.passwordShort = "Password needs to be at least 5 characters long.";
-            isValid = false;
-        }
-        if (!(email && email.includes(".") && email.includes("@"))) {
-            emailError.emailNotEmail = "Please enter correct email address.";
-            isValid = false;
-        }
-        setUsernameError(usernameError);
-        setPasswordError(passwordError);
-        setEmailError(emailError);
-        setBirthdateError(birthdateError);
-        return isValid;
-    };
-    return(/*#__PURE__*/ _jsxRuntime.jsx(_formDefault.default, {
-        className: "register-view justify-content-md-center",
-        __source: {
-            fileName: "src/components/registration-view/registration-view.jsx",
-            lineNumber: 79,
-            columnNumber: 9
-        },
-        __self: this,
-        children: /*#__PURE__*/ _jsxRuntime.jsx(_reactBootstrapDefault.default, {
-            __source: {
-                fileName: "src/components/registration-view/registration-view.jsx",
-                lineNumber: 80,
-                columnNumber: 13
-            },
-            __self: this,
-            children: /*#__PURE__*/ _jsxRuntime.jsxs(_formDefault.default, {
-                __source: {
-                    fileName: "src/components/registration-view/registration-view.jsx",
-                    lineNumber: 81,
-                    columnNumber: 17
-                },
-                __self: this,
-                children: [
-                    /*#__PURE__*/ _jsxRuntime.jsxs(_formDefault.default.Group, {
-                        controlId: "formBasicUsername",
-                        __source: {
-                            fileName: "src/components/registration-view/registration-view.jsx",
-                            lineNumber: 83,
-                            columnNumber: 21
-                        },
-                        __self: this,
-                        children: [
-                            /*#__PURE__*/ _jsxRuntime.jsx(_formDefault.default.Label, {
-                                __source: {
-                                    fileName: "src/components/registration-view/registration-view.jsx",
-                                    lineNumber: 85,
-                                    columnNumber: 25
-                                },
-                                __self: this,
-                                children: "Username:"
-                            }),
-                            /*#__PURE__*/ _jsxRuntime.jsx(_formDefault.default.Control, {
-                                className: "username",
-                                value: username,
-                                type: "text",
-                                placeholder: "Create Username",
-                                onChange: (e)=>setUsername(e.target.value)
-                                ,
-                                __source: {
-                                    fileName: "src/components/registration-view/registration-view.jsx",
-                                    lineNumber: 88,
-                                    columnNumber: 25
-                                },
-                                __self: this
-                            }),
-                            Object.keys(usernameError1).map((key)=>{
-                                return(/*#__PURE__*/ _jsxRuntime.jsx("div", {
-                                    __source: {
-                                        fileName: "src/components/registration-view/registration-view.jsx",
-                                        lineNumber: 99,
-                                        columnNumber: 37
-                                    },
-                                    __self: this,
-                                    children: usernameError1[key]
-                                }, key));
-                            })
-                        ]
-                    }),
-                    /*#__PURE__*/ _jsxRuntime.jsxs(_formDefault.default.Group, {
-                        controlId: "formBasicPassword",
-                        __source: {
-                            fileName: "src/components/registration-view/registration-view.jsx",
-                            lineNumber: 106,
-                            columnNumber: 21
-                        },
-                        __self: this,
-                        children: [
-                            /*#__PURE__*/ _jsxRuntime.jsx(_formDefault.default.Label, {
-                                __source: {
-                                    fileName: "src/components/registration-view/registration-view.jsx",
-                                    lineNumber: 108,
-                                    columnNumber: 25
-                                },
-                                __self: this,
-                                children: "Password:"
-                            }),
-                            /*#__PURE__*/ _jsxRuntime.jsx(_formDefault.default.Control, {
-                                className: "password",
-                                value: password,
-                                type: "text",
-                                placeholder: "Create Password",
-                                onChange: (e)=>setPassword(e.target.value)
-                                ,
-                                __source: {
-                                    fileName: "src/components/registration-view/registration-view.jsx",
-                                    lineNumber: 111,
-                                    columnNumber: 25
-                                },
-                                __self: this
-                            }),
-                            Object.keys(passwordError1).map((key)=>{
-                                return(/*#__PURE__*/ _jsxRuntime.jsx("div", {
-                                    __source: {
-                                        fileName: "src/components/registration-view/registration-view.jsx",
-                                        lineNumber: 122,
-                                        columnNumber: 37
-                                    },
-                                    __self: this,
-                                    children: passwordError1[key]
-                                }, key));
-                            })
-                        ]
-                    }),
-                    /*#__PURE__*/ _jsxRuntime.jsxs(_formDefault.default.Group, {
-                        controlId: "formBasicBirthday",
-                        __source: {
-                            fileName: "src/components/registration-view/registration-view.jsx",
-                            lineNumber: 129,
-                            columnNumber: 21
-                        },
-                        __self: this,
-                        children: [
-                            /*#__PURE__*/ _jsxRuntime.jsx(_formDefault.default.Label, {
-                                __source: {
-                                    fileName: "src/components/registration-view/registration-view.jsx",
-                                    lineNumber: 131,
-                                    columnNumber: 25
-                                },
-                                __self: this,
-                                children: "Birthday:"
-                            }),
-                            /*#__PURE__*/ _jsxRuntime.jsx(_formDefault.default.Control, {
-                                className: "birthday",
-                                value: birthday,
-                                type: "date",
-                                placeholder: "Enter Birthday",
-                                onChange: (e)=>setBirthday(e.target.value)
-                                ,
-                                __source: {
-                                    fileName: "src/components/registration-view/registration-view.jsx",
-                                    lineNumber: 134,
-                                    columnNumber: 25
-                                },
-                                __self: this
-                            }),
-                            Object.keys(birthdateError1).map((key)=>{
-                                return(/*#__PURE__*/ _jsxRuntime.jsx("div", {
-                                    __source: {
-                                        fileName: "src/components/registration-view/registration-view.jsx",
-                                        lineNumber: 145,
-                                        columnNumber: 37
-                                    },
-                                    __self: this,
-                                    children: birthdateError1[key]
-                                }, key));
-                            })
-                        ]
-                    }),
-                    /*#__PURE__*/ _jsxRuntime.jsxs(_formDefault.default.Group, {
-                        controlId: "formBasicEmail",
-                        __source: {
-                            fileName: "src/components/registration-view/registration-view.jsx",
-                            lineNumber: 152,
-                            columnNumber: 21
-                        },
-                        __self: this,
-                        children: [
-                            /*#__PURE__*/ _jsxRuntime.jsx(_formDefault.default.Label, {
-                                __source: {
-                                    fileName: "src/components/registration-view/registration-view.jsx",
-                                    lineNumber: 154,
-                                    columnNumber: 25
-                                },
-                                __self: this,
-                                children: "Email:"
-                            }),
-                            /*#__PURE__*/ _jsxRuntime.jsx(_formDefault.default.Control, {
-                                className: "email",
-                                value: email,
-                                type: "email",
-                                placeholder: "Enter Email",
-                                onChange: (e)=>setEmail(e.target.value)
-                                ,
-                                __source: {
-                                    fileName: "src/components/registration-view/registration-view.jsx",
-                                    lineNumber: 157,
-                                    columnNumber: 25
-                                },
-                                __self: this
-                            }),
-                            /*#__PURE__*/ _jsxRuntime.jsx(_formDefault.default.Text, {
-                                className: "text-muted",
-                                __source: {
-                                    fileName: "src/components/registration-view/registration-view.jsx",
-                                    lineNumber: 165,
-                                    columnNumber: 25
-                                },
-                                __self: this,
-                                children: "We'll never share your email with anyone else."
-                            }),
-                            Object.keys(emailError1).map((key)=>{
-                                return(/*#__PURE__*/ _jsxRuntime.jsx("div", {
-                                    __source: {
-                                        fileName: "src/components/registration-view/registration-view.jsx",
-                                        lineNumber: 172,
-                                        columnNumber: 37
-                                    },
-                                    __self: this,
-                                    children: emailError1[key]
-                                }, key));
-                            })
-                        ]
-                    }),
-                    /*#__PURE__*/ _jsxRuntime.jsx(_buttonDefault.default, {
-                        variant: "primary",
-                        type: "submit",
-                        __source: {
-                            fileName: "src/components/registration-view/registration-view.jsx",
-                            lineNumber: 179,
-                            columnNumber: 21
-                        },
-                        __self: this,
-                        children: "Submit"
-                    })
-                ]
-            })
-        })
-    }));
-}
-_s(RegistrationView, "jrRfq/vUMfjXTK+X7wbCAZgV7k4=");
-_c = RegistrationView;
-var _c;
-$RefreshReg$(_c, "RegistrationView");
-
-  $parcel$ReactRefreshHelpers$00e7.postlude(module);
-} finally {
-  window.$RefreshReg$ = prevRefreshReg;
-  window.$RefreshSig$ = prevRefreshSig;
-}
-},{"react/jsx-runtime":"6Ds2u","react":"4mchR","prop-types":"2bysO","axios":"1IeuP","react-bootstrap/Button":"64Pgd","react-bootstrap/Form":"PeiIB","react-router-dom":"etVME","react-bootstrap":"9qMdX","@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"9pz13"}],"9qMdX":[function(require,module,exports) {
+},{"classnames":"2cVcN","react":"4mchR","./FormGroup":"6eZW8","./ThemeProvider":"oG7Uz","react/jsx-runtime":"6Ds2u","@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV"}],"9qMdX":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "Accordion", ()=>_accordionDefault.default
@@ -44548,7 +44184,336 @@ parcelHelpers.defineInteropFlag(exports);
 );
 var _reactDom = require("react-dom");
 
-},{"react-dom":"afyCw","@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV"}],"6dgbZ":[function(require,module,exports) {
+},{"react-dom":"afyCw","@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV"}],"hONex":[function() {},{}],"lGbHG":[function(require,module,exports) {
+var $parcel$ReactRefreshHelpers$00e7 = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
+var prevRefreshReg = window.$RefreshReg$;
+var prevRefreshSig = window.$RefreshSig$;
+$parcel$ReactRefreshHelpers$00e7.prelude(module);
+
+try {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+// SCSS Import
+// import "./registration-view.scss"
+parcelHelpers.export(exports, "RegistrationView", ()=>RegistrationView
+);
+var _jsxRuntime = require("react/jsx-runtime");
+var _react = require("react");
+var _reactDefault = parcelHelpers.interopDefault(_react);
+var _propTypes = require("prop-types");
+var _propTypesDefault = parcelHelpers.interopDefault(_propTypes);
+var _axios = require("axios");
+var _axiosDefault = parcelHelpers.interopDefault(_axios);
+var _button = require("react-bootstrap/Button");
+var _buttonDefault = parcelHelpers.interopDefault(_button);
+var _form = require("react-bootstrap/Form");
+var _formDefault = parcelHelpers.interopDefault(_form);
+var _reactRouterDom = require("react-router-dom");
+var _reactRouterDomDefault = parcelHelpers.interopDefault(_reactRouterDom);
+var _reactBootstrap = require("react-bootstrap");
+var _reactBootstrapDefault = parcelHelpers.interopDefault(_reactBootstrap);
+var _s = $RefreshSig$();
+function RegistrationView(props) {
+    _s();
+    const [username, setUsername] = _react.useState('');
+    const [password, setPassword] = _react.useState('');
+    const [email, setEmail] = _react.useState('');
+    const [birthday, setBirthday] = _react.useState('');
+    const [usernameError1, setUsernameError] = _react.useState({
+    });
+    const [passwordError1, setPasswordError] = _react.useState({
+    });
+    const [emailError1, setEmailError] = _react.useState({
+    });
+    const [birthdateError1, setBirthdateError] = _react.useState({
+    });
+    const handleSubmit = (e)=>{
+        e.preventDefault();
+        _axiosDefault.default.post('https://mysterious-refuge-92228.herokuapp.com/users', {
+            Username: username,
+            Password: password,
+            Email: email,
+            Birthday: birthday
+        }).then((response)=>{
+            const data = response.data;
+            console.log(data);
+            window.open('/', '_self');
+        }).catch(function(error) {
+            console.log('error registering the user');
+        });
+    };
+    const formValidation = ()=>{
+        let usernameError = {
+        };
+        let passwordError = {
+        };
+        let emailError = {
+        };
+        let birthdateError = {
+        };
+        let isValid = true;
+        if (username === '') {
+            usernameError.usernameEmpty = "Please enter your username.";
+            isValid = false;
+        }
+        if (username.trim().length < 5) {
+            usernameError.usernameShort = "Username needs to be at least 5 characters long.";
+            isValid = false;
+        }
+        if (password.trim().length < 5) {
+            passwordError.passwordShort = "Password needs to be at least 5 characters long.";
+            isValid = false;
+        }
+        if (!(email && email.includes(".") && email.includes("@"))) {
+            emailError.emailNotEmail = "Please enter correct email address.";
+            isValid = false;
+        }
+        setUsernameError(usernameError);
+        setPasswordError(passwordError);
+        setEmailError(emailError);
+        setBirthdateError(birthdateError);
+        return isValid;
+    };
+    return(/*#__PURE__*/ _jsxRuntime.jsx(_formDefault.default, {
+        className: "register-view justify-content-md-center",
+        __source: {
+            fileName: "src/components/registration-view/registration-view.jsx",
+            lineNumber: 80,
+            columnNumber: 9
+        },
+        __self: this,
+        children: /*#__PURE__*/ _jsxRuntime.jsx(_reactBootstrapDefault.default, {
+            __source: {
+                fileName: "src/components/registration-view/registration-view.jsx",
+                lineNumber: 81,
+                columnNumber: 13
+            },
+            __self: this,
+            children: /*#__PURE__*/ _jsxRuntime.jsxs(_formDefault.default, {
+                __source: {
+                    fileName: "src/components/registration-view/registration-view.jsx",
+                    lineNumber: 82,
+                    columnNumber: 17
+                },
+                __self: this,
+                children: [
+                    /*#__PURE__*/ _jsxRuntime.jsxs(_formDefault.default.Group, {
+                        controlId: "formBasicUsername",
+                        __source: {
+                            fileName: "src/components/registration-view/registration-view.jsx",
+                            lineNumber: 84,
+                            columnNumber: 21
+                        },
+                        __self: this,
+                        children: [
+                            /*#__PURE__*/ _jsxRuntime.jsx(_formDefault.default.Label, {
+                                __source: {
+                                    fileName: "src/components/registration-view/registration-view.jsx",
+                                    lineNumber: 86,
+                                    columnNumber: 25
+                                },
+                                __self: this,
+                                children: "Username:"
+                            }),
+                            /*#__PURE__*/ _jsxRuntime.jsx(_formDefault.default.Control, {
+                                className: "username",
+                                value: username,
+                                type: "text",
+                                placeholder: "Create Username",
+                                onChange: (e)=>setUsername(e.target.value)
+                                ,
+                                __source: {
+                                    fileName: "src/components/registration-view/registration-view.jsx",
+                                    lineNumber: 89,
+                                    columnNumber: 25
+                                },
+                                __self: this
+                            }),
+                            Object.keys(usernameError1).map((key)=>{
+                                return(/*#__PURE__*/ _jsxRuntime.jsx("div", {
+                                    __source: {
+                                        fileName: "src/components/registration-view/registration-view.jsx",
+                                        lineNumber: 100,
+                                        columnNumber: 37
+                                    },
+                                    __self: this,
+                                    children: usernameError1[key]
+                                }, key));
+                            })
+                        ]
+                    }),
+                    /*#__PURE__*/ _jsxRuntime.jsxs(_formDefault.default.Group, {
+                        controlId: "formBasicPassword",
+                        __source: {
+                            fileName: "src/components/registration-view/registration-view.jsx",
+                            lineNumber: 107,
+                            columnNumber: 21
+                        },
+                        __self: this,
+                        children: [
+                            /*#__PURE__*/ _jsxRuntime.jsx(_formDefault.default.Label, {
+                                __source: {
+                                    fileName: "src/components/registration-view/registration-view.jsx",
+                                    lineNumber: 109,
+                                    columnNumber: 25
+                                },
+                                __self: this,
+                                children: "Password:"
+                            }),
+                            /*#__PURE__*/ _jsxRuntime.jsx(_formDefault.default.Control, {
+                                className: "password",
+                                value: password,
+                                type: "text",
+                                placeholder: "Create Password",
+                                onChange: (e)=>setPassword(e.target.value)
+                                ,
+                                __source: {
+                                    fileName: "src/components/registration-view/registration-view.jsx",
+                                    lineNumber: 112,
+                                    columnNumber: 25
+                                },
+                                __self: this
+                            }),
+                            Object.keys(passwordError1).map((key)=>{
+                                return(/*#__PURE__*/ _jsxRuntime.jsx("div", {
+                                    __source: {
+                                        fileName: "src/components/registration-view/registration-view.jsx",
+                                        lineNumber: 123,
+                                        columnNumber: 37
+                                    },
+                                    __self: this,
+                                    children: passwordError1[key]
+                                }, key));
+                            })
+                        ]
+                    }),
+                    /*#__PURE__*/ _jsxRuntime.jsxs(_formDefault.default.Group, {
+                        controlId: "formBasicBirthday",
+                        __source: {
+                            fileName: "src/components/registration-view/registration-view.jsx",
+                            lineNumber: 130,
+                            columnNumber: 21
+                        },
+                        __self: this,
+                        children: [
+                            /*#__PURE__*/ _jsxRuntime.jsx(_formDefault.default.Label, {
+                                __source: {
+                                    fileName: "src/components/registration-view/registration-view.jsx",
+                                    lineNumber: 132,
+                                    columnNumber: 25
+                                },
+                                __self: this,
+                                children: "Birthday:"
+                            }),
+                            /*#__PURE__*/ _jsxRuntime.jsx(_formDefault.default.Control, {
+                                className: "birthday",
+                                value: birthday,
+                                type: "date",
+                                placeholder: "Enter Birthday",
+                                onChange: (e)=>setBirthday(e.target.value)
+                                ,
+                                __source: {
+                                    fileName: "src/components/registration-view/registration-view.jsx",
+                                    lineNumber: 135,
+                                    columnNumber: 25
+                                },
+                                __self: this
+                            }),
+                            Object.keys(birthdateError1).map((key)=>{
+                                return(/*#__PURE__*/ _jsxRuntime.jsx("div", {
+                                    __source: {
+                                        fileName: "src/components/registration-view/registration-view.jsx",
+                                        lineNumber: 146,
+                                        columnNumber: 37
+                                    },
+                                    __self: this,
+                                    children: birthdateError1[key]
+                                }, key));
+                            })
+                        ]
+                    }),
+                    /*#__PURE__*/ _jsxRuntime.jsxs(_formDefault.default.Group, {
+                        controlId: "formBasicEmail",
+                        __source: {
+                            fileName: "src/components/registration-view/registration-view.jsx",
+                            lineNumber: 153,
+                            columnNumber: 21
+                        },
+                        __self: this,
+                        children: [
+                            /*#__PURE__*/ _jsxRuntime.jsx(_formDefault.default.Label, {
+                                __source: {
+                                    fileName: "src/components/registration-view/registration-view.jsx",
+                                    lineNumber: 155,
+                                    columnNumber: 25
+                                },
+                                __self: this,
+                                children: "Email:"
+                            }),
+                            /*#__PURE__*/ _jsxRuntime.jsx(_formDefault.default.Control, {
+                                className: "email",
+                                value: email,
+                                type: "email",
+                                placeholder: "Enter Email",
+                                onChange: (e)=>setEmail(e.target.value)
+                                ,
+                                __source: {
+                                    fileName: "src/components/registration-view/registration-view.jsx",
+                                    lineNumber: 158,
+                                    columnNumber: 25
+                                },
+                                __self: this
+                            }),
+                            /*#__PURE__*/ _jsxRuntime.jsx(_formDefault.default.Text, {
+                                className: "text-muted",
+                                __source: {
+                                    fileName: "src/components/registration-view/registration-view.jsx",
+                                    lineNumber: 166,
+                                    columnNumber: 25
+                                },
+                                __self: this,
+                                children: "We'll never share your email with anyone else."
+                            }),
+                            Object.keys(emailError1).map((key)=>{
+                                return(/*#__PURE__*/ _jsxRuntime.jsx("div", {
+                                    __source: {
+                                        fileName: "src/components/registration-view/registration-view.jsx",
+                                        lineNumber: 173,
+                                        columnNumber: 37
+                                    },
+                                    __self: this,
+                                    children: emailError1[key]
+                                }, key));
+                            })
+                        ]
+                    }),
+                    /*#__PURE__*/ _jsxRuntime.jsx(_buttonDefault.default, {
+                        variant: "primary",
+                        type: "submit",
+                        __source: {
+                            fileName: "src/components/registration-view/registration-view.jsx",
+                            lineNumber: 180,
+                            columnNumber: 21
+                        },
+                        __self: this,
+                        children: "Submit"
+                    })
+                ]
+            })
+        })
+    }));
+}
+_s(RegistrationView, "jrRfq/vUMfjXTK+X7wbCAZgV7k4=");
+_c = RegistrationView;
+var _c;
+$RefreshReg$(_c, "RegistrationView");
+
+  $parcel$ReactRefreshHelpers$00e7.postlude(module);
+} finally {
+  window.$RefreshReg$ = prevRefreshReg;
+  window.$RefreshSig$ = prevRefreshSig;
+}
+},{"react/jsx-runtime":"6Ds2u","react":"4mchR","prop-types":"2bysO","axios":"1IeuP","react-bootstrap/Button":"64Pgd","react-bootstrap/Form":"PeiIB","react-router-dom":"etVME","@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"9pz13","react-bootstrap":"9qMdX"}],"6dgbZ":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "SET_MOVIES", ()=>SET_MOVIES
