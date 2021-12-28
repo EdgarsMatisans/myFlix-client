@@ -9,7 +9,7 @@ import {
     Routes,
 } from "react-router-dom";
 import { setMovies } from '../../actions/actions';
-// import MoviesList from '../movies-list/movies-list';
+import MoviesList from '../movies-list/movies-list';
 
 import { MovieCard } from "../movie-card/movie-card";
 import { MovieView } from "../movie-view/movie-view";
@@ -102,7 +102,7 @@ export class MainView extends React.Component {
                                     </Col>
                                 );
                             if (movies.length === 0) return <div className="main-view" />;
-                            return <MovieList movies={movies} />;
+                            return <MoviesList movies={movies} />;
                         }}
                     />
                     {/* route for link on main-view to register-view */}

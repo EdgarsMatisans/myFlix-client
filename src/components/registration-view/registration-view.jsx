@@ -6,7 +6,7 @@ import Form from 'react-bootstrap/Form';
 import Route from "react-router-dom"
 import Router from "react-router-dom"
 import BrowserRouter from "react-router-dom";
-import Container from 'react-bootstrap';
+import { Container } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 // SCSS Import
 // import "./registration-view.scss"
