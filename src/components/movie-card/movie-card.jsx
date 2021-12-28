@@ -11,7 +11,6 @@ import './movie-card.scss';
 export class MovieCard extends React.Component {
     render() {
         const { movie } = this.props;
-        console.log(movie)
         return (
             <Card>
                 <Card.Img variant="top" src={movie.ImagePath} />

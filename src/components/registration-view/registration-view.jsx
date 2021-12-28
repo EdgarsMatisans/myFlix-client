@@ -77,112 +77,115 @@ export function RegistrationView(props) {
     };
 
     return (
-        <Form className="register-view justify-content-md-center">
+        <Form className="register-view justify-content-md-center"
+            onSubmit={handleSubmit}>
+
             <Container>
-                <Form>
 
-                    <Form.Group
-                        controlId="formBasicUsername">
-                        <Form.Label>
-                            Username:
-                        </Form.Label>
-                        <Form.Control
-                            className="username"
-                            value={username}
-                            type="text"
-                            placeholder="Create Username"
-                            onChange={e =>
-                                setUsername(e.target.value)}>
-                        </Form.Control>
-                        {Object.keys(usernameError)
-                            .map((key) => {
-                                return (
-                                    <div key={key}>
-                                        {usernameError[key]}
-                                    </div>
-                                );
-                            })}
-                    </Form.Group>
 
-                    <Form.Group
-                        controlId="formBasicPassword">
-                        <Form.Label>
-                            Password:
-                        </Form.Label>
-                        <Form.Control
-                            className="password"
-                            value={password}
-                            type="text"
-                            placeholder="Create Password"
-                            onChange={e =>
-                                setPassword(e.target.value)}>
-                        </Form.Control>
-                        {Object.keys(passwordError)
-                            .map((key) => {
-                                return (
-                                    <div key={key}>
-                                        {passwordError[key]}
-                                    </div>
-                                );
-                            })}
-                    </Form.Group>
+                <Form.Group
+                    controlId="formBasicUsername">
+                    <Form.Label>
+                        Username:
+                    </Form.Label>
+                    <Form.Control
+                        className="username"
+                        value={username}
+                        type="text"
+                        placeholder="Create Username"
+                        onChange={e =>
+                            setUsername(e.target.value)}>
+                    </Form.Control>
+                    {Object.keys(usernameError)
+                        .map((key) => {
+                            return (
+                                <div key={key}>
+                                    {usernameError[key]}
+                                </div>
+                            );
+                        })}
+                </Form.Group>
 
-                    <Form.Group
-                        controlId="formBasicBirthday">
-                        <Form.Label>
-                            Birthday:
-                        </Form.Label>
-                        <Form.Control
-                            className="birthday"
-                            value={birthday}
-                            type="date"
-                            placeholder="Enter Birthday"
-                            onChange={e =>
-                                setBirthday(e.target.value)}>
-                        </Form.Control>
-                        {Object.keys(birthdateError)
-                            .map((key) => {
-                                return (
-                                    <div key={key}>
-                                        {birthdateError[key]}
-                                    </div>
-                                );
-                            })}
-                    </Form.Group>
+                <Form.Group
+                    controlId="formBasicPassword">
+                    <Form.Label>
+                        Password:
+                    </Form.Label>
+                    <Form.Control
+                        className="password"
+                        value={password}
+                        type="text"
+                        placeholder="Create Password"
+                        onChange={e =>
+                            setPassword(e.target.value)}>
+                    </Form.Control>
+                    {Object.keys(passwordError)
+                        .map((key) => {
+                            return (
+                                <div key={key}>
+                                    {passwordError[key]}
+                                </div>
+                            );
+                        })}
+                </Form.Group>
 
-                    <Form.Group
-                        controlId="formBasicEmail">
-                        <Form.Label>
-                            Email:
-                        </Form.Label>
-                        <Form.Control
-                            className="email"
-                            value={email}
-                            type="email"
-                            placeholder="Enter Email"
-                            onChange={e =>
-                                setEmail(e.target.value)}>
-                        </Form.Control>
-                        <Form.Text
-                            className="text-muted">
-                            We'll never share your email with anyone else.
-                        </Form.Text>
-                        {Object.keys(emailError)
-                            .map((key) => {
-                                return (
-                                    <div key={key}>
-                                        {emailError[key]}
-                                    </div>
-                                );
-                            })}
-                    </Form.Group>
+                <Form.Group
+                    controlId="formBasicBirthday">
+                    <Form.Label>
+                        Birthday:
+                    </Form.Label>
+                    <Form.Control
+                        className="birthday"
+                        value={birthday}
+                        type="date"
+                        placeholder="Enter Birthday"
+                        onChange={e =>
+                            setBirthday(e.target.value)}>
+                    </Form.Control>
+                    {Object.keys(birthdateError)
+                        .map((key) => {
+                            return (
+                                <div key={key}>
+                                    {birthdateError[key]}
+                                </div>
+                            );
+                        })}
+                </Form.Group>
 
-                    <Button
-                        variant="primary"
-                        type="submit">
-                        Submit
-                    </Button>
-                </Form>
+                <Form.Group
+                    controlId="formBasicEmail">
+                    <Form.Label>
+                        Email:
+                    </Form.Label>
+                    <Form.Control
+                        className="email"
+                        value={email}
+                        type="email"
+                        placeholder="Enter Email"
+                        onChange={e =>
+                            setEmail(e.target.value)}>
+                    </Form.Control>
+                    <Form.Text
+                        className="text-muted">
+                        We'll never share your email with anyone else.
+                    </Form.Text>
+                    {Object.keys(emailError)
+                        .map((key) => {
+                            return (
+                                <div key={key}>
+                                    {emailError[key]}
+                                </div>
+                            );
+                        })}
+                </Form.Group>
+
+
+                <Button
+                    variant="primary"
+                    type="submit">
+                    Submit
+                </Button>
+
             </Container>
         </Form>
     );

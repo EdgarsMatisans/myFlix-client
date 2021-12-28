@@ -43739,230 +43739,223 @@ function RegistrationView(props) {
     };
     return(/*#__PURE__*/ _jsxRuntime.jsx(_formDefault.default, {
         className: "register-view justify-content-md-center",
+        onSubmit: handleSubmit,
         __source: {
             fileName: "src/components/registration-view/registration-view.jsx",
             lineNumber: 80,
             columnNumber: 9
         },
         __self: this,
-        children: /*#__PURE__*/ _jsxRuntime.jsx(_reactBootstrap.Container, {
+        children: /*#__PURE__*/ _jsxRuntime.jsxs(_reactBootstrap.Container, {
             __source: {
                 fileName: "src/components/registration-view/registration-view.jsx",
-                lineNumber: 81,
+                lineNumber: 83,
                 columnNumber: 13
             },
             __self: this,
-            children: /*#__PURE__*/ _jsxRuntime.jsxs(_formDefault.default, {
-                __source: {
-                    fileName: "src/components/registration-view/registration-view.jsx",
-                    lineNumber: 82,
-                    columnNumber: 17
-                },
-                __self: this,
-                children: [
-                    /*#__PURE__*/ _jsxRuntime.jsxs(_formDefault.default.Group, {
-                        controlId: "formBasicUsername",
-                        __source: {
-                            fileName: "src/components/registration-view/registration-view.jsx",
-                            lineNumber: 84,
-                            columnNumber: 21
-                        },
-                        __self: this,
-                        children: [
-                            /*#__PURE__*/ _jsxRuntime.jsx(_formDefault.default.Label, {
+            children: [
+                /*#__PURE__*/ _jsxRuntime.jsxs(_formDefault.default.Group, {
+                    controlId: "formBasicUsername",
+                    __source: {
+                        fileName: "src/components/registration-view/registration-view.jsx",
+                        lineNumber: 86,
+                        columnNumber: 17
+                    },
+                    __self: this,
+                    children: [
+                        /*#__PURE__*/ _jsxRuntime.jsx(_formDefault.default.Label, {
+                            __source: {
+                                fileName: "src/components/registration-view/registration-view.jsx",
+                                lineNumber: 88,
+                                columnNumber: 21
+                            },
+                            __self: this,
+                            children: "Username:"
+                        }),
+                        /*#__PURE__*/ _jsxRuntime.jsx(_formDefault.default.Control, {
+                            className: "username",
+                            value: username,
+                            type: "text",
+                            placeholder: "Create Username",
+                            onChange: (e)=>setUsername(e.target.value)
+                            ,
+                            __source: {
+                                fileName: "src/components/registration-view/registration-view.jsx",
+                                lineNumber: 91,
+                                columnNumber: 21
+                            },
+                            __self: this
+                        }),
+                        Object.keys(usernameError1).map((key)=>{
+                            return(/*#__PURE__*/ _jsxRuntime.jsx("div", {
                                 __source: {
                                     fileName: "src/components/registration-view/registration-view.jsx",
-                                    lineNumber: 86,
-                                    columnNumber: 25
+                                    lineNumber: 102,
+                                    columnNumber: 33
                                 },
                                 __self: this,
-                                children: "Username:"
-                            }),
-                            /*#__PURE__*/ _jsxRuntime.jsx(_formDefault.default.Control, {
-                                className: "username",
-                                value: username,
-                                type: "text",
-                                placeholder: "Create Username",
-                                onChange: (e)=>setUsername(e.target.value)
-                                ,
+                                children: usernameError1[key]
+                            }, key));
+                        })
+                    ]
+                }),
+                /*#__PURE__*/ _jsxRuntime.jsxs(_formDefault.default.Group, {
+                    controlId: "formBasicPassword",
+                    __source: {
+                        fileName: "src/components/registration-view/registration-view.jsx",
+                        lineNumber: 109,
+                        columnNumber: 17
+                    },
+                    __self: this,
+                    children: [
+                        /*#__PURE__*/ _jsxRuntime.jsx(_formDefault.default.Label, {
+                            __source: {
+                                fileName: "src/components/registration-view/registration-view.jsx",
+                                lineNumber: 111,
+                                columnNumber: 21
+                            },
+                            __self: this,
+                            children: "Password:"
+                        }),
+                        /*#__PURE__*/ _jsxRuntime.jsx(_formDefault.default.Control, {
+                            className: "password",
+                            value: password,
+                            type: "text",
+                            placeholder: "Create Password",
+                            onChange: (e)=>setPassword(e.target.value)
+                            ,
+                            __source: {
+                                fileName: "src/components/registration-view/registration-view.jsx",
+                                lineNumber: 114,
+                                columnNumber: 21
+                            },
+                            __self: this
+                        }),
+                        Object.keys(passwordError1).map((key)=>{
+                            return(/*#__PURE__*/ _jsxRuntime.jsx("div", {
                                 __source: {
                                     fileName: "src/components/registration-view/registration-view.jsx",
-                                    lineNumber: 89,
-                                    columnNumber: 25
-                                },
-                                __self: this
-                            }),
-                            Object.keys(usernameError1).map((key)=>{
-                                return(/*#__PURE__*/ _jsxRuntime.jsx("div", {
-                                    __source: {
-                                        fileName: "src/components/registration-view/registration-view.jsx",
-                                        lineNumber: 100,
-                                        columnNumber: 37
-                                    },
-                                    __self: this,
-                                    children: usernameError1[key]
-                                }, key));
-                            })
-                        ]
-                    }),
-                    /*#__PURE__*/ _jsxRuntime.jsxs(_formDefault.default.Group, {
-                        controlId: "formBasicPassword",
-                        __source: {
-                            fileName: "src/components/registration-view/registration-view.jsx",
-                            lineNumber: 107,
-                            columnNumber: 21
-                        },
-                        __self: this,
-                        children: [
-                            /*#__PURE__*/ _jsxRuntime.jsx(_formDefault.default.Label, {
-                                __source: {
-                                    fileName: "src/components/registration-view/registration-view.jsx",
-                                    lineNumber: 109,
-                                    columnNumber: 25
-                                },
-                                __self: this,
-                                children: "Password:"
-                            }),
-                            /*#__PURE__*/ _jsxRuntime.jsx(_formDefault.default.Control, {
-                                className: "password",
-                                value: password,
-                                type: "text",
-                                placeholder: "Create Password",
-                                onChange: (e)=>setPassword(e.target.value)
-                                ,
-                                __source: {
-                                    fileName: "src/components/registration-view/registration-view.jsx",
-                                    lineNumber: 112,
-                                    columnNumber: 25
-                                },
-                                __self: this
-                            }),
-                            Object.keys(passwordError1).map((key)=>{
-                                return(/*#__PURE__*/ _jsxRuntime.jsx("div", {
-                                    __source: {
-                                        fileName: "src/components/registration-view/registration-view.jsx",
-                                        lineNumber: 123,
-                                        columnNumber: 37
-                                    },
-                                    __self: this,
-                                    children: passwordError1[key]
-                                }, key));
-                            })
-                        ]
-                    }),
-                    /*#__PURE__*/ _jsxRuntime.jsxs(_formDefault.default.Group, {
-                        controlId: "formBasicBirthday",
-                        __source: {
-                            fileName: "src/components/registration-view/registration-view.jsx",
-                            lineNumber: 130,
-                            columnNumber: 21
-                        },
-                        __self: this,
-                        children: [
-                            /*#__PURE__*/ _jsxRuntime.jsx(_formDefault.default.Label, {
-                                __source: {
-                                    fileName: "src/components/registration-view/registration-view.jsx",
-                                    lineNumber: 132,
-                                    columnNumber: 25
+                                    lineNumber: 125,
+                                    columnNumber: 33
                                 },
                                 __self: this,
-                                children: "Birthday:"
-                            }),
-                            /*#__PURE__*/ _jsxRuntime.jsx(_formDefault.default.Control, {
-                                className: "birthday",
-                                value: birthday,
-                                type: "date",
-                                placeholder: "Enter Birthday",
-                                onChange: (e)=>setBirthday(e.target.value)
-                                ,
+                                children: passwordError1[key]
+                            }, key));
+                        })
+                    ]
+                }),
+                /*#__PURE__*/ _jsxRuntime.jsxs(_formDefault.default.Group, {
+                    controlId: "formBasicBirthday",
+                    __source: {
+                        fileName: "src/components/registration-view/registration-view.jsx",
+                        lineNumber: 132,
+                        columnNumber: 17
+                    },
+                    __self: this,
+                    children: [
+                        /*#__PURE__*/ _jsxRuntime.jsx(_formDefault.default.Label, {
+                            __source: {
+                                fileName: "src/components/registration-view/registration-view.jsx",
+                                lineNumber: 134,
+                                columnNumber: 21
+                            },
+                            __self: this,
+                            children: "Birthday:"
+                        }),
+                        /*#__PURE__*/ _jsxRuntime.jsx(_formDefault.default.Control, {
+                            className: "birthday",
+                            value: birthday,
+                            type: "date",
+                            placeholder: "Enter Birthday",
+                            onChange: (e)=>setBirthday(e.target.value)
+                            ,
+                            __source: {
+                                fileName: "src/components/registration-view/registration-view.jsx",
+                                lineNumber: 137,
+                                columnNumber: 21
+                            },
+                            __self: this
+                        }),
+                        Object.keys(birthdateError1).map((key)=>{
+                            return(/*#__PURE__*/ _jsxRuntime.jsx("div", {
                                 __source: {
                                     fileName: "src/components/registration-view/registration-view.jsx",
-                                    lineNumber: 135,
-                                    columnNumber: 25
-                                },
-                                __self: this
-                            }),
-                            Object.keys(birthdateError1).map((key)=>{
-                                return(/*#__PURE__*/ _jsxRuntime.jsx("div", {
-                                    __source: {
-                                        fileName: "src/components/registration-view/registration-view.jsx",
-                                        lineNumber: 146,
-                                        columnNumber: 37
-                                    },
-                                    __self: this,
-                                    children: birthdateError1[key]
-                                }, key));
-                            })
-                        ]
-                    }),
-                    /*#__PURE__*/ _jsxRuntime.jsxs(_formDefault.default.Group, {
-                        controlId: "formBasicEmail",
-                        __source: {
-                            fileName: "src/components/registration-view/registration-view.jsx",
-                            lineNumber: 153,
-                            columnNumber: 21
-                        },
-                        __self: this,
-                        children: [
-                            /*#__PURE__*/ _jsxRuntime.jsx(_formDefault.default.Label, {
-                                __source: {
-                                    fileName: "src/components/registration-view/registration-view.jsx",
-                                    lineNumber: 155,
-                                    columnNumber: 25
-                                },
-                                __self: this,
-                                children: "Email:"
-                            }),
-                            /*#__PURE__*/ _jsxRuntime.jsx(_formDefault.default.Control, {
-                                className: "email",
-                                value: email,
-                                type: "email",
-                                placeholder: "Enter Email",
-                                onChange: (e)=>setEmail(e.target.value)
-                                ,
-                                __source: {
-                                    fileName: "src/components/registration-view/registration-view.jsx",
-                                    lineNumber: 158,
-                                    columnNumber: 25
-                                },
-                                __self: this
-                            }),
-                            /*#__PURE__*/ _jsxRuntime.jsx(_formDefault.default.Text, {
-                                className: "text-muted",
-                                __source: {
-                                    fileName: "src/components/registration-view/registration-view.jsx",
-                                    lineNumber: 166,
-                                    columnNumber: 25
+                                    lineNumber: 148,
+                                    columnNumber: 33
                                 },
                                 __self: this,
-                                children: "We'll never share your email with anyone else."
-                            }),
-                            Object.keys(emailError1).map((key)=>{
-                                return(/*#__PURE__*/ _jsxRuntime.jsx("div", {
-                                    __source: {
-                                        fileName: "src/components/registration-view/registration-view.jsx",
-                                        lineNumber: 173,
-                                        columnNumber: 37
-                                    },
-                                    __self: this,
-                                    children: emailError1[key]
-                                }, key));
-                            })
-                        ]
-                    }),
-                    /*#__PURE__*/ _jsxRuntime.jsx(_buttonDefault.default, {
-                        variant: "primary",
-                        type: "submit",
-                        __source: {
-                            fileName: "src/components/registration-view/registration-view.jsx",
-                            lineNumber: 180,
-                            columnNumber: 21
-                        },
-                        __self: this,
-                        children: "Submit"
-                    })
-                ]
-            })
+                                children: birthdateError1[key]
+                            }, key));
+                        })
+                    ]
+                }),
+                /*#__PURE__*/ _jsxRuntime.jsxs(_formDefault.default.Group, {
+                    controlId: "formBasicEmail",
+                    __source: {
+                        fileName: "src/components/registration-view/registration-view.jsx",
+                        lineNumber: 155,
+                        columnNumber: 17
+                    },
+                    __self: this,
+                    children: [
+                        /*#__PURE__*/ _jsxRuntime.jsx(_formDefault.default.Label, {
+                            __source: {
+                                fileName: "src/components/registration-view/registration-view.jsx",
+                                lineNumber: 157,
+                                columnNumber: 21
+                            },
+                            __self: this,
+                            children: "Email:"
+                        }),
+                        /*#__PURE__*/ _jsxRuntime.jsx(_formDefault.default.Control, {
+                            className: "email",
+                            value: email,
+                            type: "email",
+                            placeholder: "Enter Email",
+                            onChange: (e)=>setEmail(e.target.value)
+                            ,
+                            __source: {
+                                fileName: "src/components/registration-view/registration-view.jsx",
+                                lineNumber: 160,
+                                columnNumber: 21
+                            },
+                            __self: this
+                        }),
+                        /*#__PURE__*/ _jsxRuntime.jsx(_formDefault.default.Text, {
+                            className: "text-muted",
+                            __source: {
+                                fileName: "src/components/registration-view/registration-view.jsx",
+                                lineNumber: 168,
+                                columnNumber: 21
+                            },
+                            __self: this,
+                            children: "We'll never share your email with anyone else."
+                        }),
+                        Object.keys(emailError1).map((key)=>{
+                            return(/*#__PURE__*/ _jsxRuntime.jsx("div", {
+                                __source: {
+                                    fileName: "src/components/registration-view/registration-view.jsx",
+                                    lineNumber: 175,
+                                    columnNumber: 33
+                                },
+                                __self: this,
+                                children: emailError1[key]
+                            }, key));
+                        })
+                    ]
+                }),
+                /*#__PURE__*/ _jsxRuntime.jsx(_buttonDefault.default, {
+                    variant: "primary",
+                    type: "submit",
+                    __source: {
+                        fileName: "src/components/registration-view/registration-view.jsx",
+                        lineNumber: 183,
+                        columnNumber: 17
+                    },
+                    __self: this,
+                    children: "Submit"
+                })
+            ]
         })
     }));
 }
