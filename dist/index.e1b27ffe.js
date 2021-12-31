@@ -29153,13 +29153,33 @@ function LoginView(props) {
                         __self: this,
                         children: "Register"
                     }),
+                    /*#__PURE__*/ _jsxRuntime.jsx(_reactRouterDom.Link, {
+                        to: `/register`,
+                        __source: {
+                            fileName: "src/components/login-view/login-view.jsx",
+                            lineNumber: 72,
+                            columnNumber: 17
+                        },
+                        __self: this,
+                        children: /*#__PURE__*/ _jsxRuntime.jsx(_buttonDefault.default, {
+                            variant: "primary",
+                            type: "button",
+                            __source: {
+                                fileName: "src/components/login-view/login-view.jsx",
+                                lineNumber: 74,
+                                columnNumber: 21
+                            },
+                            __self: this,
+                            children: "RegisterNow"
+                        })
+                    }),
                     /*#__PURE__*/ _jsxRuntime.jsx(_buttonDefault.default, {
                         variant: "success link",
                         type: "submit",
                         onClick: handleSubmit,
                         __source: {
                             fileName: "src/components/login-view/login-view.jsx",
-                            lineNumber: 70,
+                            lineNumber: 81,
                             columnNumber: 17
                         },
                         __self: this,

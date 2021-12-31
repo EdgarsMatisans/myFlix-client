@@ -67,6 +67,17 @@ export function
                     type="button">
                     Register
                 </Button>
+
+
+                <Link
+                    to={`/register`}>
+                    <Button
+                        variant="primary"
+                        type="button">
+
+                        RegisterNow
+                    </Button>
+                </Link>
                 <Button
                     variant="success link"
                     type="submit"
