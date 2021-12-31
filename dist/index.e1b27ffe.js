@@ -43819,7 +43819,7 @@ function RegistrationView(props) {
                         /*#__PURE__*/ _jsxRuntime.jsx(_formDefault.default.Control, {
                             className: "password",
                             value: password,
-                            type: "text",
+                            type: "password",
                             placeholder: "Create Password",
                             onChange: (e)=>setPassword(e.target.value)
                             ,
