@@ -61,13 +61,6 @@ export function
             </Form.Group>
             <div
                 className="buttons-login">
-                <Button
-                    onClick={() => { window.location.href = "/register" }}
-                    variant="primary"
-                    type="button">
-                    Register
-                </Button>
-
 
                 <Link
                     to={`/register`}>
@@ -75,7 +68,7 @@ export function
                         variant="primary"
                         type="button">
 
-                        RegisterNow
+                        Register
                     </Button>
                 </Link>
                 <Button
