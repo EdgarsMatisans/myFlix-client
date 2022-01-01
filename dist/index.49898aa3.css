@@ -21,6 +21,17 @@ body,
 body {
   font-family: "Teko", sans-serif !important;
 }
+.button {
+  justify-content: center;
+}
+
+.header-favourites {
+  margin: 40px;
+}
+
+.favourite-movies {
+  width: 50%;
+}
 .my-flix {
   color: steelblue;
 }
