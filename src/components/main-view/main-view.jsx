@@ -8,7 +8,7 @@ import {
     Redirect,
     Routes,
 } from "react-router-dom";
-import { setMovies } from '../../actions/actions';
+// import { setMovies } from '../../actions/actions';
 import MoviesList from '../movies-list/movies-list';
 
 import { MovieCard } from "../movie-card/movie-card";
