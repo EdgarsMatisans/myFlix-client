@@ -6,7 +6,7 @@ export const SET_USER = "SET_USER";
 export const UPDATE_USER = "UPDATE_USER";
 
 
-export function setMovie(value) {
+export function setMovies(value) {
   return { type: SET_MOVIES, value };
 }
 

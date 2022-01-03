@@ -8,7 +8,7 @@ import {
     Redirect,
     Routes,
 } from "react-router-dom";
-// import { setMovies } from '../../actions/actions';
+import { setMovies } from '../../actions/actions';
 import MoviesList from '../movies-list/movies-list';
 
 import { MovieCard } from "../movie-card/movie-card";
@@ -140,7 +140,7 @@ export class MainView extends React.Component {
                             );
                         }}
                     />
-
+                    {/* 
                     <Route
                         path="/directors/:Name"
                         render={({ match, history }) => {
@@ -191,7 +191,7 @@ export class MainView extends React.Component {
                                 </Col>
                             );
                         }}
-                    />
+                    /> */}
                 </Row>
             </Router>
         );
